@@ -5,6 +5,10 @@ let totalQuestions = 0;
 let currentWeek = 1;
 let savedAnswers = [];
 
+let currentQuiz = null;
+
+let quizHistory = [];
+
 
 // --------------------------------------------------
 // Determine which quiz week should be displayed
@@ -151,6 +155,510 @@ function loadSavedProgress() {
 
 }
 
+// --------------------------------------------------
+// Load quiz history
+// --------------------------------------------------
+
+function loadQuizHistory() {
+
+    const saved =
+        localStorage.getItem(
+            "quizHistory"
+        );
+
+
+    if (!saved) {
+
+        quizHistory = [];
+
+        return;
+
+    }
+
+
+    try {
+
+        const parsed =
+            JSON.parse(saved);
+
+
+        if (Array.isArray(parsed)) {
+
+            quizHistory = parsed;
+
+        }
+
+        else {
+
+            quizHistory = [];
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Quiz history was invalid and has been reset."
+        );
+
+        quizHistory = [];
+
+        localStorage.removeItem(
+            "quizHistory"
+        );
+
+    }
+
+}
+
+// --------------------------------------------------
+// Save quiz history
+// --------------------------------------------------
+
+function saveQuizHistory() {
+
+    localStorage.setItem(
+
+        "quizHistory",
+
+        JSON.stringify(quizHistory)
+
+    );
+
+}
+
+// --------------------------------------------------
+// Save completed quiz result
+// --------------------------------------------------
+
+function saveCompletedQuiz() {
+
+    if (
+        !currentQuiz ||
+        completedQuestions !== totalQuestions
+    ) {
+
+        return;
+
+    }
+
+
+    const categoryResults = {};
+
+
+    let questionIndex = 0;
+
+
+    currentQuiz.categories.forEach(
+
+        category => {
+
+            let correct = 0;
+
+            let total = category.questions.length;
+
+
+            category.questions.forEach(
+
+                () => {
+
+                    if (
+                        savedAnswers[questionIndex]
+                        === true
+                    ) {
+
+                        correct++;
+
+                    }
+
+                    questionIndex++;
+
+                }
+
+            );
+
+
+            categoryResults[
+                category.name
+            ] = {
+
+                correct: correct,
+
+                total: total
+
+            };
+
+        }
+
+    );
+
+
+    const result = {
+
+        week: currentQuiz.week,
+
+        score: score,
+
+        total: totalQuestions,
+
+        percentage:
+            Math.round(
+                (score / totalQuestions) * 100
+            ),
+
+        completedAt:
+            new Date().toISOString(),
+
+        categories:
+            categoryResults
+
+    };
+
+
+    // ----------------------------------------------
+    // Replace an existing result for this week
+    // ----------------------------------------------
+
+    const existingIndex =
+        quizHistory.findIndex(
+
+            quiz =>
+                quiz.week === currentQuiz.week
+
+        );
+
+
+    if (existingIndex >= 0) {
+
+        quizHistory[
+            existingIndex
+        ] = result;
+
+    }
+
+    else {
+
+        quizHistory.push(result);
+
+    }
+
+
+    saveQuizHistory();
+
+    displayStatistics();
+
+}
+
+// --------------------------------------------------
+// Display statistics
+// --------------------------------------------------
+
+function displayStatistics() {
+
+    const completedElement =
+        document.getElementById(
+            "quizzes-completed"
+        );
+
+
+    const averageElement =
+        document.getElementById(
+            "average-score"
+        );
+
+
+    const questionsElement =
+        document.getElementById(
+            "questions-answered"
+        );
+
+
+    if (!completedElement) {
+
+        return;
+
+    }
+
+
+    // ----------------------------------------------
+    // No history yet
+    // ----------------------------------------------
+
+    if (quizHistory.length === 0) {
+
+        completedElement.textContent = "0";
+
+        averageElement.textContent = "0%";
+
+        questionsElement.textContent = "0";
+
+        return;
+
+    }
+
+
+    // ----------------------------------------------
+    // Basic totals
+    // ----------------------------------------------
+
+    const totalQuizzes =
+        quizHistory.length;
+
+
+    const totalQuestionsAnswered =
+        quizHistory.reduce(
+
+            (total, quiz) =>
+                total + quiz.total,
+
+            0
+
+        );
+
+
+    const averageScore =
+        Math.round(
+
+            quizHistory.reduce(
+
+                (total, quiz) =>
+                    total + quiz.percentage,
+
+                0
+
+            ) / totalQuizzes
+
+        );
+
+
+    completedElement.textContent =
+        totalQuizzes;
+
+
+    averageElement.textContent =
+        `${averageScore}%`;
+
+
+    questionsElement.textContent =
+        totalQuestionsAnswered;
+
+
+    displayWeeklyHistory();
+
+    displayCategoryHistory();
+
+}
+
+// --------------------------------------------------
+// Display weekly history
+// --------------------------------------------------
+
+function displayWeeklyHistory() {
+
+    const container =
+        document.getElementById(
+            "weekly-history"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    if (quizHistory.length === 0) {
+
+        container.innerHTML =
+            "<p>No completed quizzes yet.</p>";
+
+        return;
+
+    }
+
+
+    const sortedHistory =
+        [...quizHistory].sort(
+
+            (a, b) =>
+                a.week - b.week
+
+        );
+
+
+    container.innerHTML = "";
+
+
+    sortedHistory.forEach(
+
+        quiz => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "week-history-item";
+
+
+            item.innerHTML = `
+
+                <span>
+                    Week ${quiz.week}
+                </span>
+
+                <span class="week-score">
+                    ${quiz.score} / ${quiz.total}
+                    (${quiz.percentage}%)
+                </span>
+
+            `;
+
+
+            container.appendChild(item);
+
+        }
+
+    );
+
+}
+
+// --------------------------------------------------
+// Display category history
+// --------------------------------------------------
+
+function displayCategoryHistory() {
+
+    const container =
+        document.getElementById(
+            "category-history"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    const categories = {};
+
+
+    // ----------------------------------------------
+    // Combine all historical results
+    // ----------------------------------------------
+
+    quizHistory.forEach(
+
+        quiz => {
+
+            Object.entries(
+                quiz.categories
+            ).forEach(
+
+                ([name, result]) => {
+
+                    if (!categories[name]) {
+
+                        categories[name] = {
+
+                            correct: 0,
+
+                            total: 0
+
+                        };
+
+                    }
+
+
+                    categories[name].correct +=
+                        result.correct;
+
+
+                    categories[name].total +=
+                        result.total;
+
+                }
+
+            );
+
+        }
+
+    );
+
+
+    container.innerHTML = "";
+
+
+    // ----------------------------------------------
+    // Display each category
+    // ----------------------------------------------
+
+    Object.entries(categories).forEach(
+
+        ([name, result]) => {
+
+            const percentage =
+                Math.round(
+
+                    (
+                        result.correct /
+                        result.total
+                    ) * 100
+
+                );
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "category-history-item";
+
+
+            item.innerHTML = `
+
+                <div class="category-history-header">
+
+                    <span>
+                        ${name}
+                    </span>
+
+                    <span>
+                        ${percentage}%
+                    </span>
+
+                </div>
+
+
+                <div class="category-bar">
+
+                    <div
+                        class="category-bar-fill"
+                        style="width: ${percentage}%"
+                    ></div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(item);
+
+        }
+
+    );
+
+}
+
 
 // --------------------------------------------------
 // Save progress
@@ -174,6 +682,12 @@ function saveProgress() {
 // --------------------------------------------------
 
 function displayQuiz(quiz) {
+
+    currentQuiz = quiz;
+
+    loadQuizHistory();
+
+    displayStatistics();    
 
     const container =
         document.getElementById(
@@ -549,6 +1063,14 @@ function updateQuestionAppearance(
 
 function updateScore() {
 
+    if (
+    completedQuestions === totalQuestions &&
+    totalQuestions > 0
+    ) {
+
+    saveCompletedQuiz();
+
+    }
     const progressText =
         document.getElementById(
             "progress-text"
