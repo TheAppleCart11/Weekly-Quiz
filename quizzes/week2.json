@@ -1,0 +1,157 @@
+{
+  "week": 2,
+  "date": "2026-09-16",
+  "title": "Weekly Knowledge Challenge",
+  "categories": [
+    {
+      "name": "Electrical & Engineering",
+      "questions": [
+        {
+          "question": "What unit is used to measure electrical resistance?",
+          "answer": "Ohms (Ω).",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is the relationship between voltage, current and resistance described by Ohm's Law?",
+          "answer": "V = I × R.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is the purpose of a circuit breaker?",
+          "answer": "To automatically interrupt a circuit when excessive current occurs.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "In a PID controller, what does the 'I' represent?",
+          "answer": "Integral action.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "Why does an induction motor need slip to produce torque?",
+          "answer": "Slip creates relative motion between the rotating magnetic field and the rotor, inducing rotor currents that interact with the magnetic field to produce torque.",
+          "difficulty": "Hard"
+        }
+      ]
+    },
+    {
+      "name": "Technology",
+      "questions": [
+        {
+          "question": "What does USB stand for?",
+          "answer": "Universal Serial Bus.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What does Wi-Fi primarily allow devices to do?",
+          "answer": "Communicate over a wireless network.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is cloud computing?",
+          "answer": "The delivery of computing resources such as storage, processing and software over a network, typically the internet.",
+          "difficulty": "Medium"
+        },
+        {
+          "question": "What is an algorithm?",
+          "answer": "A defined sequence of steps or instructions used to solve a problem or perform a task.",
+          "difficulty": "Medium"
+        },
+        {
+          "question": "What is the main purpose of encryption?",
+          "answer": "To transform information into a form that is difficult for unauthorised people to understand without the appropriate key.",
+          "difficulty": "Medium"
+        }
+      ]
+    },
+    {
+      "name": "Australia",
+      "questions": [
+        {
+          "question": "What is the capital of Western Australia?",
+          "answer": "Perth.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "Which Australian state is the smallest by area?",
+          "answer": "Tasmania.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is Australia's national animal emblem?",
+          "answer": "The kangaroo and emu are featured on Australia's coat of arms; Australia does not have a single officially designated national animal.",
+          "difficulty": "Medium"
+        },
+        {
+          "question": "Which Australian city is known as the Harbour City?",
+          "answer": "Sydney.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is the name of Australia's largest coral reef ecosystem?",
+          "answer": "The Great Barrier Reef.",
+          "difficulty": "Easy"
+        }
+      ]
+    },
+    {
+      "name": "Science",
+      "questions": [
+        {
+          "question": "What force keeps planets in orbit around the Sun?",
+          "answer": "Gravity.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is H₂O?",
+          "answer": "Water.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is the chemical symbol for gold?",
+          "answer": "Au.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is DNA responsible for storing?",
+          "answer": "Genetic information.",
+          "difficulty": "Medium"
+        },
+        {
+          "question": "What is the difference between mass and weight?",
+          "answer": "Mass is the amount of matter in an object, while weight is the force exerted on that mass by gravity.",
+          "difficulty": "Medium"
+        }
+      ]
+    },
+    {
+      "name": "History & Geography",
+      "questions": [
+        {
+          "question": "Which country is the largest by land area?",
+          "answer": "Russia.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is the capital of Canada?",
+          "answer": "Ottawa.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "Which ancient civilisation developed democracy in Athens?",
+          "answer": "The ancient Greeks.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What is the world's largest ocean?",
+          "answer": "The Pacific Ocean.",
+          "difficulty": "Easy"
+        },
+        {
+          "question": "What event is generally regarded as marking the beginning of the French Revolution?",
+          "answer": "The storming of the Bastille on 14 July 1789.",
+          "difficulty": "Medium"
+        }
+      ]
+    }
+  ]
+}
