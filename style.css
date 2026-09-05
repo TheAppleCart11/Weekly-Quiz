@@ -138,6 +138,7 @@ footer {
     width: 0%;
     transition: width 0.3s ease;
 }
+
 #reset-button {
     margin-top: 15px;
     padding: 10px 18px;
