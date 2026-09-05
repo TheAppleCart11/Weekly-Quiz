@@ -1,14 +1,48 @@
 let score = 0;
+let completedQuestions = 0;
 let totalQuestions = 0;
+
+
+// --------------------------------------------------
+// Determine which quiz week should be displayed
+// --------------------------------------------------
+
+function getQuizWeek() {
+
+    const startDate = new Date("2026-09-09T00:00:00");
+
+    const today = new Date();
+
+    const difference =
+        today.getTime() - startDate.getTime();
+
+    const daysSinceStart =
+        Math.floor(difference / (1000 * 60 * 60 * 24));
+
+    const week =
+        Math.floor(daysSinceStart / 7) + 1;
+
+    return Math.max(1, week);
+}
+
+
+// --------------------------------------------------
+// Load the appropriate JSON file
+// --------------------------------------------------
 
 async function loadQuiz() {
 
     try {
 
-        const response = await fetch("quizzes/week1.json");
+        const week = getQuizWeek();
+
+        const response =
+            await fetch(`quizzes/week${week}.json`);
 
         if (!response.ok) {
-            throw new Error("Could not load quiz.");
+            throw new Error(
+                `Quiz for Week ${week} could not be found.`
+            );
         }
 
         const quiz = await response.json();
@@ -18,16 +52,28 @@ async function loadQuiz() {
     } catch (error) {
 
         document.getElementById("quiz-container").innerHTML =
-            "<p>Sorry, the quiz could not be loaded.</p>";
+            `
+            <div class="error">
+                <h2>Quiz unavailable</h2>
+                <p>
+                    This week's quiz hasn't been published yet.
+                </p>
+            </div>
+            `;
 
         console.error(error);
     }
 }
 
 
+// --------------------------------------------------
+// Display the quiz
+// --------------------------------------------------
+
 function displayQuiz(quiz) {
 
-    const container = document.getElementById("quiz-container");
+    const container =
+        document.getElementById("quiz-container");
 
     document.getElementById("quiz-title").textContent =
         `Week ${quiz.week} • 25 Questions`;
@@ -37,31 +83,42 @@ function displayQuiz(quiz) {
 
     container.innerHTML = "";
 
+    score = 0;
+    completedQuestions = 0;
     totalQuestions = 0;
+
 
     quiz.categories.forEach((category, categoryIndex) => {
 
-        const categorySection = document.createElement("section");
+        const categorySection =
+            document.createElement("section");
 
         categorySection.className = "category";
 
-        const categoryTitle = document.createElement("h2");
+
+        const categoryTitle =
+            document.createElement("h2");
 
         categoryTitle.textContent =
             `${categoryIndex + 1}. ${category.name}`;
 
         categorySection.appendChild(categoryTitle);
 
-        category.questions.forEach((question, questionIndex) => {
+
+        category.questions.forEach(question => {
 
             totalQuestions++;
+
 
             const questionCard =
                 document.createElement("div");
 
-            questionCard.className = "question-card";
+            questionCard.className =
+                "question-card";
+
 
             questionCard.innerHTML = `
+
                 <div class="question-header">
 
                     <span class="question-number">
@@ -74,10 +131,15 @@ function displayQuiz(quiz) {
 
                 </div>
 
-                <h3>${question.question}</h3>
+                <h3>
+                    ${question.question}
+                </h3>
 
                 <details>
-                    <summary>Reveal Answer</summary>
+
+                    <summary>
+                        Reveal Answer
+                    </summary>
 
                     <p class="answer">
                         ${question.answer}
@@ -98,58 +160,100 @@ function displayQuiz(quiz) {
 
             `;
 
+
             const checkbox =
-                questionCard.querySelector(".correct-checkbox");
+                questionCard.querySelector(
+                    ".correct-checkbox"
+                );
 
-            checkbox.addEventListener("change", function () {
 
-                if (this.checked) {
-                    score++;
-                } else {
-                    score--;
+            checkbox.addEventListener(
+                "change",
+                function () {
+
+                    if (this.checked) {
+
+                        score++;
+                        completedQuestions++;
+
+                    } else {
+
+                        score--;
+                        completedQuestions--;
+
+                    }
+
+                    updateScore();
+
                 }
+            );
 
-                updateScore();
 
-            });
-
-            categorySection.appendChild(questionCard);
+            categorySection.appendChild(
+                questionCard
+            );
 
         });
 
-        container.appendChild(categorySection);
+
+        container.appendChild(
+            categorySection
+        );
 
     });
+
 
     updateScore();
 }
 
+
+// --------------------------------------------------
+// Update score and progress
+// --------------------------------------------------
 
 function updateScore() {
 
     document.getElementById("score").textContent =
         `${score} / ${totalQuestions}`;
 
+
     const message =
         document.getElementById("score-message");
 
-    if (score === 0) {
+
+    if (completedQuestions === 0) {
 
         message.textContent =
             "Let's get started!";
 
-    } else if (score < totalQuestions) {
+    }
+
+    else if (completedQuestions < totalQuestions) {
 
         message.textContent =
-            `${totalQuestions - score} questions still to go.`;
+            `Progress: ${completedQuestions} / ${totalQuestions} questions`;
 
-    } else {
+    }
+
+    else if (score === totalQuestions) {
 
         message.textContent =
             "🎉 Perfect score! Excellent work.";
 
     }
+
+    else {
+
+        message.textContent =
+            `Quiz complete! You scored ${score} / ${totalQuestions}.`;
+
+    }
+
 }
 
+
+// --------------------------------------------------
+// Start the quiz
+// --------------------------------------------------
 
 loadQuiz();
