@@ -9,7 +9,7 @@ let totalQuestions = 0;
 
 function getQuizWeek() {
 
-    const startDate = new Date("2026-09-09T00:00:00");
+    const startDate = new Date("2026-09-02T00:00:00");
 
     const today = new Date();
 
@@ -212,18 +212,6 @@ function displayQuiz(quiz) {
 // --------------------------------------------------
 
 function updateScore() {
-
-    const progressText =
-    document.getElementById("progress-text");
-
-    const progressFill =
-    document.getElementById("progress-fill");
-
-    progressText.textContent =
-    `${completedQuestions} / ${totalQuestions}`;
-
-    progressFill.style.width =
-    `${(completedQuestions / totalQuestions) * 100}%`;
 
     document.getElementById("score").textContent =
         `${score} / ${totalQuestions}`;
