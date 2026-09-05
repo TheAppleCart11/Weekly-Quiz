@@ -138,3 +138,15 @@ footer {
     width: 0%;
     transition: width 0.3s ease;
 }
+#reset-button {
+    margin-top: 15px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+#reset-button:hover {
+    opacity: 0.8;
+}
