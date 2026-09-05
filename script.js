@@ -12,7 +12,7 @@ let savedAnswers = [];
 
 function getQuizWeek() {
 
-    const startDate = new Date("2026-09-05T00:00:00");
+    const startDate = new Date("2026-09-04T00:00:00");
 
     const today = new Date();
 
