@@ -12,7 +12,8 @@ let savedAnswers = [];
 
 function getQuizWeek() {
 
-    const startDate = new Date("2026-09-09T00:00:00");
+    const startDate =
+        new Date("2026-09-09T00:00:00");
 
     const today = new Date();
 
@@ -20,7 +21,10 @@ function getQuizWeek() {
         today.getTime() - startDate.getTime();
 
     const daysSinceStart =
-        Math.floor(difference / (1000 * 60 * 60 * 24));
+        Math.floor(
+            difference /
+            (1000 * 60 * 60 * 24)
+        );
 
     const week =
         Math.floor(daysSinceStart / 7) + 1;
@@ -40,7 +44,9 @@ async function loadQuiz() {
         currentWeek = getQuizWeek();
 
         const response =
-            await fetch(`quizzes/week${currentWeek}.json`);
+            await fetch(
+                `quizzes/week${currentWeek}.json`
+            );
 
         if (!response.ok) {
 
@@ -59,29 +65,38 @@ async function loadQuiz() {
 
     }
 
-catch (error) {
+    catch (error) {
 
-    document.getElementById("quiz-container").innerHTML = `
-        <div class="error">
+        document.getElementById(
+            "quiz-container"
+        ).innerHTML = `
 
-            <h2>Quiz unavailable</h2>
+            <div class="error">
 
-            <p>
-                Something went wrong while loading the quiz.
-            </p>
+                <h2>Quiz unavailable</h2>
 
-            <p>
-                <strong>Error:</strong>
-                ${error.message}
-            </p>
+                <p>
+                    Something went wrong while loading the quiz.
+                </p>
 
-        </div>
-    `;
+                <p>
+                    <strong>Error:</strong>
+                    ${error.message}
+                </p>
 
-    console.error("Quiz loading error:", error);
+            </div>
+
+        `;
+
+        console.error(
+            "Quiz loading error:",
+            error
+        );
+
+    }
 
 }
-}
+
 
 // --------------------------------------------------
 // Load saved progress
@@ -94,18 +109,46 @@ function loadSavedProgress() {
             `weeklyQuiz_week${currentWeek}`
         );
 
-    if (saved) {
-
-        savedAnswers =
-            JSON.parse(saved);
-
-    }
-
-    else {
+    if (!saved) {
 
         savedAnswers = [];
 
+        return;
     }
+
+    try {
+
+        const parsed =
+            JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+
+            savedAnswers = parsed;
+
+        }
+
+        else {
+
+            savedAnswers = [];
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Saved progress was invalid and has been reset."
+        );
+
+        savedAnswers = [];
+
+        localStorage.removeItem(
+            `weeklyQuiz_week${currentWeek}`
+        );
+
+    }
+
 }
 
 
@@ -122,6 +165,7 @@ function saveProgress() {
         JSON.stringify(savedAnswers)
 
     );
+
 }
 
 
@@ -132,12 +176,18 @@ function saveProgress() {
 function displayQuiz(quiz) {
 
     const container =
-        document.getElementById("quiz-container");
+        document.getElementById(
+            "quiz-container"
+        );
 
-    document.getElementById("quiz-title").textContent =
+    document.getElementById(
+        "quiz-title"
+    ).textContent =
         `Week ${quiz.week} • 25 Questions`;
 
-    document.getElementById("week-number").textContent =
+    document.getElementById(
+        "week-number"
+    ).textContent =
         quiz.week;
 
     container.innerHTML = "";
@@ -147,18 +197,27 @@ function displayQuiz(quiz) {
     totalQuestions = 0;
 
 
+    // ----------------------------------------------
+    // Create all question cards
+    // ----------------------------------------------
+
     quiz.categories.forEach(
+
         (category, categoryIndex) => {
 
             const categorySection =
-                document.createElement("section");
+                document.createElement(
+                    "section"
+                );
 
             categorySection.className =
                 "category";
 
 
             const categoryTitle =
-                document.createElement("h2");
+                document.createElement(
+                    "h2"
+                );
 
             categoryTitle.textContent =
                 `${categoryIndex + 1}. ${category.name}`;
@@ -169,6 +228,7 @@ function displayQuiz(quiz) {
 
 
             category.questions.forEach(
+
                 question => {
 
                     const questionNumber =
@@ -178,7 +238,9 @@ function displayQuiz(quiz) {
 
 
                     const questionCard =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
                     questionCard.className =
                         "question-card";
@@ -198,9 +260,11 @@ function displayQuiz(quiz) {
 
                         </div>
 
+
                         <h3>
                             ${question.question}
                         </h3>
+
 
                         <details>
 
@@ -214,73 +278,108 @@ function displayQuiz(quiz) {
 
                         </details>
 
-                        <label class="correct-check">
 
-                            <input
-                                type="checkbox"
-                                class="correct-checkbox"
-                            >
+                        <div class="answer-section">
 
-                            I got this correct
+                            <p class="answer-prompt">
+                                Did you get it right?
+                            </p>
 
-                        </label>
+                            <div class="answer-buttons">
+
+                                <button
+                                    class="answer-button correct-button"
+                                    data-result="correct"
+                                >
+                                    ✓ Correct
+                                </button>
+
+                                <button
+                                    class="answer-button incorrect-button"
+                                    data-result="incorrect"
+                                >
+                                    ✗ Incorrect
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     `;
 
 
-                    const checkbox =
-                        questionCard.querySelector(
-                            ".correct-checkbox"
-                        );
-
-
+                    // --------------------------------
                     // Restore saved answer
+                    // --------------------------------
+
+                    const saved =
+                        savedAnswers[
+                            questionNumber
+                        ];
 
                     if (
-                        savedAnswers[questionNumber] === true
+                        saved === true ||
+                        saved === false
                     ) {
 
-                        checkbox.checked = true;
-
-                        score++;
-
                         completedQuestions++;
+
+                        if (saved === true) {
+
+                            score++;
+
+                        }
+
+                        updateQuestionAppearance(
+                            questionCard,
+                            saved
+                        );
 
                     }
 
 
-                    checkbox.addEventListener(
-                        "change",
-                        function () {
+                    // --------------------------------
+                    // Correct / Incorrect buttons
+                    // --------------------------------
 
-                            if (this.checked) {
-
-                                savedAnswers[questionNumber] =
-                                    true;
-
-                                score++;
-
-                                completedQuestions++;
-
-                            }
-
-                            else {
-
-                                savedAnswers[questionNumber] =
-                                    false;
-
-                                score--;
-
-                                completedQuestions--;
-
-                            }
+                    const buttons =
+                        questionCard.querySelectorAll(
+                            ".answer-button"
+                        );
 
 
-                            saveProgress();
+                    buttons.forEach(
 
-                            updateScore();
+                        button => {
+
+                            button.addEventListener(
+
+                                "click",
+
+                                function () {
+
+                                    const result =
+                                        this.dataset.result;
+
+                                    const isCorrect =
+                                        result === "correct";
+
+                                    setQuestionResult(
+
+                                        questionNumber,
+
+                                        isCorrect,
+
+                                        questionCard
+
+                                    );
+
+                                }
+
+                            );
 
                         }
+
                     );
 
 
@@ -289,6 +388,7 @@ function displayQuiz(quiz) {
                     );
 
                 }
+
             );
 
 
@@ -297,10 +397,148 @@ function displayQuiz(quiz) {
             );
 
         }
+
     );
 
 
     updateScore();
+
+}
+
+
+// --------------------------------------------------
+// Set a question as Correct or Incorrect
+// --------------------------------------------------
+
+function setQuestionResult(
+    questionNumber,
+    isCorrect,
+    questionCard
+) {
+
+    const previousAnswer =
+        savedAnswers[questionNumber];
+
+
+    // ----------------------------------------------
+    // If this question hasn't been answered yet
+    // ----------------------------------------------
+
+    if (
+        previousAnswer !== true &&
+        previousAnswer !== false
+    ) {
+
+        completedQuestions++;
+
+    }
+
+
+    // ----------------------------------------------
+    // Remove previous correct score
+    // if the user changes their answer
+    // ----------------------------------------------
+
+    if (previousAnswer === true) {
+
+        score--;
+
+    }
+
+
+    // ----------------------------------------------
+    // Save new answer
+    // ----------------------------------------------
+
+    savedAnswers[questionNumber] =
+        isCorrect;
+
+
+    // ----------------------------------------------
+    // Add score if correct
+    // ----------------------------------------------
+
+    if (isCorrect) {
+
+        score++;
+
+    }
+
+
+    updateQuestionAppearance(
+        questionCard,
+        isCorrect
+    );
+
+
+    saveProgress();
+
+    updateScore();
+
+}
+
+
+// --------------------------------------------------
+// Update the visual appearance of a question
+// --------------------------------------------------
+
+function updateQuestionAppearance(
+    questionCard,
+    answer
+) {
+
+    const correctButton =
+        questionCard.querySelector(
+            ".correct-button"
+        );
+
+    const incorrectButton =
+        questionCard.querySelector(
+            ".incorrect-button"
+        );
+
+
+    questionCard.classList.remove(
+        "answered",
+        "correct",
+        "incorrect"
+    );
+
+    correctButton.classList.remove(
+        "selected"
+    );
+
+    incorrectButton.classList.remove(
+        "selected"
+    );
+
+
+    if (answer === true) {
+
+        questionCard.classList.add(
+            "answered",
+            "correct"
+        );
+
+        correctButton.classList.add(
+            "selected"
+        );
+
+    }
+
+
+    if (answer === false) {
+
+        questionCard.classList.add(
+            "answered",
+            "incorrect"
+        );
+
+        incorrectButton.classList.add(
+            "selected"
+        );
+
+    }
 
 }
 
@@ -326,17 +564,52 @@ function updateScore() {
         `${completedQuestions} / ${totalQuestions}`;
 
 
+    const percentage =
+        totalQuestions > 0
+            ? (completedQuestions / totalQuestions) * 100
+            : 0;
+
+
     progressFill.style.width =
-        `${(completedQuestions / totalQuestions) * 100}%`;
+        `${percentage}%`;
 
 
-    document.getElementById("score").textContent =
+    // ----------------------------------------------
+    // Score
+    // ----------------------------------------------
+
+    document.getElementById(
+        "score"
+    ).textContent =
         `${score} / ${totalQuestions}`;
 
+
+    const scorePercentage =
+        totalQuestions > 0
+            ? Math.round(
+                (score / totalQuestions) * 100
+            )
+            : 0;
+
+
+    document.getElementById(
+        "score-percentage"
+    ).textContent =
+        `${scorePercentage}%`;
+
+
+    // ----------------------------------------------
+    // Messages
+    // ----------------------------------------------
 
     const message =
         document.getElementById(
             "score-message"
+        );
+
+    const summary =
+        document.getElementById(
+            "result-summary"
         );
 
 
@@ -345,16 +618,24 @@ function updateScore() {
         message.textContent =
             "Let's get started!";
 
+        summary.textContent =
+            "Answer each question and mark yourself as correct or incorrect.";
+
     }
+
 
     else if (
         completedQuestions < totalQuestions
     ) {
 
         message.textContent =
-            `Progress: ${completedQuestions} / ${totalQuestions} questions`;
+            `You've answered ${completedQuestions} of ${totalQuestions} questions.`;
+
+        summary.textContent =
+            `${score} correct • ${completedQuestions - score} incorrect`;
 
     }
+
 
     else if (
         score === totalQuestions
@@ -363,12 +644,19 @@ function updateScore() {
         message.textContent =
             "🎉 Perfect score! Excellent work.";
 
+        summary.textContent =
+            `All ${totalQuestions} questions correct!`;
+
     }
+
 
     else {
 
         message.textContent =
-            `Quiz complete! You scored ${score} / ${totalQuestions}.`;
+            "🎉 Quiz complete!";
+
+        summary.textContent =
+            `${score} correct • ${totalQuestions - score} incorrect`;
 
     }
 
@@ -386,8 +674,11 @@ function resetQuiz() {
             "Are you sure you want to reset this week's quiz?"
         );
 
+
     if (!confirmed) {
+
         return;
+
     }
 
 
