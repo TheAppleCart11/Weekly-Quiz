@@ -12,7 +12,7 @@ let savedAnswers = [];
 
 function getQuizWeek() {
 
-    const startDate = new Date("2026-09-04T00:00:00");
+    const startDate = new Date("2026-09-09T00:00:00");
 
     const today = new Date();
 
@@ -59,23 +59,27 @@ async function loadQuiz() {
 
     }
 
-    catch (error) {
+catch (error) {
 
-        document.getElementById("quiz-container").innerHTML = `
-            <div class="error">
+    document.getElementById("quiz-container").innerHTML = `
+        <div class="error">
 
-                <h2>Quiz unavailable</h2>
+            <h2>Quiz unavailable</h2>
 
-                <p>
-                    This week's quiz hasn't been published yet.
-                </p>
+            <p>
+                Something went wrong while loading the quiz.
+            </p>
 
-            </div>
-        `;
+            <p>
+                <strong>Error:</strong>
+                ${error.message}
+            </p>
 
-        console.error(error);
+        </div>
+    `;
 
-    }
+    console.error("Quiz loading error:", error);
+
 }
 
 
