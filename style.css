@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+    margin: 0;
+    line-height: 1.6;
+}
+
+header {
+    background: #1f2937;
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+header h1 {
+    margin: 0 0 10px;
+}
+
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.category {
+    margin-bottom: 40px;
+}
+
+.category h2 {
+    border-bottom: 3px solid #1f2937;
+    padding-bottom: 8px;
+}
+
+.question-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.question-number {
+    font-weight: bold;
+}
+
+.difficulty {
+    font-size: 0.85rem;
+    background: #e5e7eb;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.question-card h3 {
+    margin-top: 5px;
+}
+
+details {
+    margin-top: 15px;
+    background: #f3f4f6;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+summary {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.answer {
+    margin-bottom: 0;
+}
+
+.correct-check {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.correct-checkbox {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+#results {
+    background: white;
+    text-align: center;
+    padding: 30px;
+    margin: 40px 0;
+    border-radius: 10px;
+}
+
+#score {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
