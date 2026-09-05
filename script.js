@@ -81,7 +81,7 @@ catch (error) {
     console.error("Quiz loading error:", error);
 
 }
-
+}
 
 // --------------------------------------------------
 // Load saved progress
