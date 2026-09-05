@@ -619,3 +619,80 @@ footer {
     }
 
 }
+
+/* --------------------------------------------------
+   Achievements
+-------------------------------------------------- */
+
+#achievements {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
+    margin-top: 15px;
+}
+
+
+.achievement {
+    padding: 15px;
+
+    border-radius: 8px;
+
+    background: #f3f4f6;
+
+    border: 2px solid #e5e7eb;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.achievement.unlocked {
+    background: #f9fafb;
+
+    border-color: #9ca3af;
+}
+
+
+.achievement.locked {
+    opacity: 0.5;
+}
+
+
+.achievement-icon {
+    font-size: 1.8rem;
+
+    margin-right: 8px;
+}
+
+
+.achievement-name {
+    font-weight: bold;
+
+    display: block;
+
+    margin-bottom: 3px;
+}
+
+
+.achievement-description {
+    font-size: 0.85rem;
+
+    color: #666;
+}
+
+
+/* --------------------------------------------------
+   Mobile achievements
+-------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+    #achievements {
+        grid-template-columns: 1fr;
+    }
+
+}
