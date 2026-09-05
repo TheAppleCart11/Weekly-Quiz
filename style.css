@@ -450,3 +450,172 @@ footer {
     }
 
 }
+
+/* --------------------------------------------------
+   Statistics
+-------------------------------------------------- */
+
+#statistics {
+    background: white;
+
+    padding: 30px;
+
+    margin: 40px 0;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+
+#statistics h2 {
+    text-align: center;
+
+    margin-top: 0;
+
+    margin-bottom: 25px;
+}
+
+
+/* --------------------------------------------------
+   Statistics overview cards
+-------------------------------------------------- */
+
+.stats-overview {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 35px;
+}
+
+
+.stat-card {
+    background: #f3f4f6;
+
+    border-radius: 8px;
+
+    padding: 20px;
+
+    text-align: center;
+}
+
+
+.stat-label {
+    display: block;
+
+    font-size: 0.9rem;
+
+    margin-bottom: 8px;
+}
+
+
+.stat-card strong {
+    display: block;
+
+    font-size: 2rem;
+}
+
+
+/* --------------------------------------------------
+   Weekly history
+-------------------------------------------------- */
+
+.week-history-item {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.week-history-item:last-child {
+    border-bottom: none;
+}
+
+
+.week-score {
+    font-weight: bold;
+}
+
+
+/* --------------------------------------------------
+   Category history
+-------------------------------------------------- */
+
+.category-history-item {
+    margin: 15px 0;
+}
+
+
+.category-history-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 5px;
+
+    font-weight: bold;
+}
+
+
+.category-bar {
+    height: 10px;
+
+    background: #e5e7eb;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+.category-bar-fill {
+    height: 100%;
+
+    transition:
+        width 0.3s ease;
+}
+
+
+/* --------------------------------------------------
+   Mobile statistics
+-------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+    #statistics {
+        padding: 20px 16px;
+    }
+
+
+    .stats-overview {
+        grid-template-columns: 1fr;
+    }
+
+
+    .stat-card strong {
+        font-size: 1.8rem;
+    }
+
+
+    .week-history-item {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 3px;
+    }
+
+}
