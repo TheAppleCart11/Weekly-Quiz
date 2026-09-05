@@ -3,26 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Weekly Knowledge Challenge</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>🧠 Weekly Knowledge Challenge</h1>
+    <header>
+        <h1>🧠 Weekly Knowledge Challenge</h1>
+        <p id="quiz-title">Loading quiz...</p>
+    </header>
 
-    <h2>Welcome to the Weekly Quiz</h2>
+    <main>
 
-    <p>
-        A new 25-question knowledge challenge will appear here every Wednesday.
-    </p>
+        <div id="quiz-container">
+            <p>Loading questions...</p>
+        </div>
 
-    <p>
-        5 categories × 5 questions
-    </p>
+        <section id="results">
+            <h2>Your Score</h2>
 
-    <hr>
+            <div id="score">
+                0 / 25
+            </div>
 
-    <h3>Week 1 coming soon...</h3>
+            <p id="score-message">
+                Complete the quiz to see your result.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Weekly Quiz • Week <span id="week-number">1</span></p>
+    </footer>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
