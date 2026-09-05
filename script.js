@@ -2,6 +2,9 @@ let score = 0;
 let completedQuestions = 0;
 let totalQuestions = 0;
 
+let currentWeek = 1;
+let savedAnswers = [];
+
 
 // --------------------------------------------------
 // Determine which quiz week should be displayed
@@ -9,7 +12,7 @@ let totalQuestions = 0;
 
 function getQuizWeek() {
 
-    const startDate = new Date("2026-08-28T00:00:00");
+    const startDate = new Date("2026-09-09T00:00:00");
 
     const today = new Date();
 
@@ -27,42 +30,94 @@ function getQuizWeek() {
 
 
 // --------------------------------------------------
-// Load the appropriate JSON file
+// Load the appropriate quiz
 // --------------------------------------------------
 
 async function loadQuiz() {
 
     try {
 
-        const week = getQuizWeek();
+        currentWeek = getQuizWeek();
 
         const response =
-            await fetch(`quizzes/week${week}.json`);
+            await fetch(`quizzes/week${currentWeek}.json`);
 
         if (!response.ok) {
+
             throw new Error(
-                `Quiz for Week ${week} could not be found.`
+                `Quiz for Week ${currentWeek} could not be found.`
             );
+
         }
 
-        const quiz = await response.json();
+        const quiz =
+            await response.json();
+
+        loadSavedProgress();
 
         displayQuiz(quiz);
 
-    } catch (error) {
+    }
 
-        document.getElementById("quiz-container").innerHTML =
-            `
+    catch (error) {
+
+        document.getElementById("quiz-container").innerHTML = `
             <div class="error">
+
                 <h2>Quiz unavailable</h2>
+
                 <p>
                     This week's quiz hasn't been published yet.
                 </p>
+
             </div>
-            `;
+        `;
 
         console.error(error);
+
     }
+}
+
+
+// --------------------------------------------------
+// Load saved progress
+// --------------------------------------------------
+
+function loadSavedProgress() {
+
+    const saved =
+        localStorage.getItem(
+            `weeklyQuiz_week${currentWeek}`
+        );
+
+    if (saved) {
+
+        savedAnswers =
+            JSON.parse(saved);
+
+    }
+
+    else {
+
+        savedAnswers = [];
+
+    }
+}
+
+
+// --------------------------------------------------
+// Save progress
+// --------------------------------------------------
+
+function saveProgress() {
+
+    localStorage.setItem(
+
+        `weeklyQuiz_week${currentWeek}`,
+
+        JSON.stringify(savedAnswers)
+
+    );
 }
 
 
@@ -88,122 +143,161 @@ function displayQuiz(quiz) {
     totalQuestions = 0;
 
 
-    quiz.categories.forEach((category, categoryIndex) => {
+    quiz.categories.forEach(
+        (category, categoryIndex) => {
 
-        const categorySection =
-            document.createElement("section");
+            const categorySection =
+                document.createElement("section");
 
-        categorySection.className = "category";
-
-
-        const categoryTitle =
-            document.createElement("h2");
-
-        categoryTitle.textContent =
-            `${categoryIndex + 1}. ${category.name}`;
-
-        categorySection.appendChild(categoryTitle);
+            categorySection.className =
+                "category";
 
 
-        category.questions.forEach(question => {
+            const categoryTitle =
+                document.createElement("h2");
 
-            totalQuestions++;
+            categoryTitle.textContent =
+                `${categoryIndex + 1}. ${category.name}`;
 
-
-            const questionCard =
-                document.createElement("div");
-
-            questionCard.className =
-                "question-card";
-
-
-            questionCard.innerHTML = `
-
-                <div class="question-header">
-
-                    <span class="question-number">
-                        Question ${totalQuestions}
-                    </span>
-
-                    <span class="difficulty">
-                        ${question.difficulty}
-                    </span>
-
-                </div>
-
-                <h3>
-                    ${question.question}
-                </h3>
-
-                <details>
-
-                    <summary>
-                        Reveal Answer
-                    </summary>
-
-                    <p class="answer">
-                        ${question.answer}
-                    </p>
-
-                </details>
-
-                <label class="correct-check">
-
-                    <input
-                        type="checkbox"
-                        class="correct-checkbox"
-                    >
-
-                    I got this correct
-
-                </label>
-
-            `;
+            categorySection.appendChild(
+                categoryTitle
+            );
 
 
-            const checkbox =
-                questionCard.querySelector(
-                    ".correct-checkbox"
-                );
+            category.questions.forEach(
+                question => {
+
+                    const questionNumber =
+                        totalQuestions;
+
+                    totalQuestions++;
 
 
-            checkbox.addEventListener(
-                "change",
-                function () {
+                    const questionCard =
+                        document.createElement("div");
 
-                    if (this.checked) {
+                    questionCard.className =
+                        "question-card";
+
+
+                    questionCard.innerHTML = `
+
+                        <div class="question-header">
+
+                            <span class="question-number">
+                                Question ${totalQuestions}
+                            </span>
+
+                            <span class="difficulty">
+                                ${question.difficulty}
+                            </span>
+
+                        </div>
+
+                        <h3>
+                            ${question.question}
+                        </h3>
+
+                        <details>
+
+                            <summary>
+                                Reveal Answer
+                            </summary>
+
+                            <p class="answer">
+                                ${question.answer}
+                            </p>
+
+                        </details>
+
+                        <label class="correct-check">
+
+                            <input
+                                type="checkbox"
+                                class="correct-checkbox"
+                            >
+
+                            I got this correct
+
+                        </label>
+
+                    `;
+
+
+                    const checkbox =
+                        questionCard.querySelector(
+                            ".correct-checkbox"
+                        );
+
+
+                    // Restore saved answer
+
+                    if (
+                        savedAnswers[questionNumber] === true
+                    ) {
+
+                        checkbox.checked = true;
 
                         score++;
+
                         completedQuestions++;
-
-                    } else {
-
-                        score--;
-                        completedQuestions--;
 
                     }
 
-                    updateScore();
+
+                    checkbox.addEventListener(
+                        "change",
+                        function () {
+
+                            if (this.checked) {
+
+                                savedAnswers[questionNumber] =
+                                    true;
+
+                                score++;
+
+                                completedQuestions++;
+
+                            }
+
+                            else {
+
+                                savedAnswers[questionNumber] =
+                                    false;
+
+                                score--;
+
+                                completedQuestions--;
+
+                            }
+
+
+                            saveProgress();
+
+                            updateScore();
+
+                        }
+                    );
+
+
+                    categorySection.appendChild(
+                        questionCard
+                    );
 
                 }
             );
 
 
-            categorySection.appendChild(
-                questionCard
+            container.appendChild(
+                categorySection
             );
 
-        });
-
-
-        container.appendChild(
-            categorySection
-        );
-
-    });
+        }
+    );
 
 
     updateScore();
+
 }
 
 
@@ -214,13 +308,19 @@ function displayQuiz(quiz) {
 function updateScore() {
 
     const progressText =
-        document.getElementById("progress-text");
+        document.getElementById(
+            "progress-text"
+        );
 
     const progressFill =
-        document.getElementById("progress-fill");
+        document.getElementById(
+            "progress-fill"
+        );
+
 
     progressText.textContent =
         `${completedQuestions} / ${totalQuestions}`;
+
 
     progressFill.style.width =
         `${(completedQuestions / totalQuestions) * 100}%`;
@@ -231,7 +331,9 @@ function updateScore() {
 
 
     const message =
-        document.getElementById("score-message");
+        document.getElementById(
+            "score-message"
+        );
 
 
     if (completedQuestions === 0) {
@@ -241,14 +343,18 @@ function updateScore() {
 
     }
 
-    else if (completedQuestions < totalQuestions) {
+    else if (
+        completedQuestions < totalQuestions
+    ) {
 
         message.textContent =
             `Progress: ${completedQuestions} / ${totalQuestions} questions`;
 
     }
 
-    else if (score === totalQuestions) {
+    else if (
+        score === totalQuestions
+    ) {
 
         message.textContent =
             "🎉 Perfect score! Excellent work.";
@@ -266,7 +372,33 @@ function updateScore() {
 
 
 // --------------------------------------------------
-// Start the quiz
+// Reset the current quiz
+// --------------------------------------------------
+
+function resetQuiz() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to reset this week's quiz?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    localStorage.removeItem(
+        `weeklyQuiz_week${currentWeek}`
+    );
+
+
+    location.reload();
+
+}
+
+
+// --------------------------------------------------
+// Start quiz
 // --------------------------------------------------
 
 loadQuiz();
