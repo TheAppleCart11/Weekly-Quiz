@@ -696,3 +696,73 @@ footer {
     }
 
 }
+
+/* --------------------------------------------------
+   Score chart
+-------------------------------------------------- */
+
+.chart-container {
+    position: relative;
+
+    width: 100%;
+
+    height: 300px;
+
+    margin: 20px 0 40px;
+}
+
+
+/* --------------------------------------------------
+   Recent quizzes
+-------------------------------------------------- */
+
+.recent-quiz {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.recent-quiz:last-child {
+    border-bottom: none;
+}
+
+
+.recent-quiz-title {
+    font-weight: bold;
+}
+
+
+.recent-quiz-score {
+    font-weight: bold;
+}
+
+
+/* --------------------------------------------------
+   Mobile chart
+-------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+    .chart-container {
+        height: 250px;
+    }
+
+
+    .recent-quiz {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 3px;
+    }
+
+}
