@@ -9,7 +9,7 @@ let totalQuestions = 0;
 
 function getQuizWeek() {
 
-    const startDate = new Date("2026-02-09T00:00:00");
+    const startDate = new Date("2026-09-09T00:00:00");
 
     const today = new Date();
 
