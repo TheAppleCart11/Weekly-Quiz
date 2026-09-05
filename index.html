@@ -1,48 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Weekly Knowledge Challenge</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
     <header>
-        <h1>🧠 Weekly Knowledge Challenge</h1>
-        <p id="quiz-title">Loading quiz...</p>
-    </header>
 
-<main>
+        <h1>
+            🧠 Weekly Knowledge Challenge
+        </h1>
 
-    <section id="results">
-
-        <h2>Your Score</h2>
-
-        <div id="score">
-            0 / 25
-        </div>
-
-        <p id="score-message">
-            Complete the quiz to see your result.
+        <p id="quiz-title">
+            Loading quiz...
         </p>
 
-        <button id="reset-button" onclick="resetQuiz()">
-            Reset This Week's Quiz
-        </button>
-
-    </section>
+    </header>
 
 
-    <div id="quiz-container">
-            <p>Loading questions...</p>
+    <main>
+
+
+        <!-- Progress -->
+
+        <section id="progress">
+
+            <div class="progress-info">
+
+                <span>
+                    Progress
+                </span>
+
+                <span id="progress-text">
+                    0 / 25
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div id="progress-fill"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Quiz -->
+
+        <div id="quiz-container">
+
+            <p>
+                Loading questions...
+            </p>
+
         </div>
 
+
+        <!-- Results -->
+
         <section id="results">
-            <h2>Your Score</h2>
+
+            <h2>
+                Your Score
+            </h2>
 
             <div id="score">
                 0 / 25
@@ -51,15 +90,32 @@
             <p id="score-message">
                 Complete the quiz to see your result.
             </p>
+
+            <button
+                id="reset-button"
+                onclick="resetQuiz()"
+            >
+                Reset This Week's Quiz
+            </button>
+
         </section>
+
 
     </main>
 
+
     <footer>
-        <p>Weekly Quiz • Week <span id="week-number">1</span></p>
+
+        <p>
+            Weekly Quiz • Week
+            <span id="week-number">1</span>
+        </p>
+
     </footer>
+
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
