@@ -229,6 +229,161 @@ function saveQuizHistory() {
 }
 
 // --------------------------------------------------
+// Calculate streak statistics
+// --------------------------------------------------
+
+function getStreakStats() {
+
+    if (quizHistory.length === 0) {
+
+        return {
+            current: 0,
+            best: 0
+        };
+
+    }
+
+
+    // Sort quizzes by week number
+
+    const weeks =
+        [...quizHistory]
+            .sort((a, b) => a.week - b.week)
+            .map(quiz => quiz.week);
+
+
+    // Remove duplicate weeks
+
+    const uniqueWeeks =
+        [...new Set(weeks)];
+
+
+    let bestStreak = 1;
+
+    let runningStreak = 1;
+
+
+    // ----------------------------------------------
+    // Find the longest consecutive run
+    // ----------------------------------------------
+
+    for (
+        let i = 1;
+        i < uniqueWeeks.length;
+        i++
+    ) {
+
+        if (
+            uniqueWeeks[i] ===
+            uniqueWeeks[i - 1] + 1
+        ) {
+
+            runningStreak++;
+
+        }
+
+        else {
+
+            runningStreak = 1;
+
+        }
+
+
+        if (
+            runningStreak > bestStreak
+        ) {
+
+            bestStreak =
+                runningStreak;
+
+        }
+
+    }
+
+
+    // ----------------------------------------------
+    // Calculate current streak
+    // ----------------------------------------------
+
+    const latestWeek =
+        uniqueWeeks[
+            uniqueWeeks.length - 1
+        ];
+
+
+    let currentStreak = 0;
+
+
+    /*
+       A streak is still active if the most
+       recently completed quiz was either:
+
+       - this week
+       - last week
+
+       This gives you time to complete the
+       current week's quiz.
+    */
+
+    if (
+        latestWeek >= currentWeek - 1
+    ) {
+
+        currentStreak = 1;
+
+
+        for (
+            let i = uniqueWeeks.length - 1;
+            i > 0;
+            i--
+        ) {
+
+            if (
+                uniqueWeeks[i] ===
+                uniqueWeeks[i - 1] + 1
+            ) {
+
+                currentStreak++;
+
+            }
+
+            else {
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    return {
+
+        current: currentStreak,
+
+        best: bestStreak
+
+    };
+
+}
+
+// --------------------------------------------------
+// Count perfect weeks
+// --------------------------------------------------
+
+function getPerfectWeeks() {
+
+    return quizHistory.filter(
+
+        quiz =>
+            quiz.score === quiz.total
+
+    ).length;
+
+}
+
+// --------------------------------------------------
 // Save completed quiz result
 // --------------------------------------------------
 
@@ -373,6 +528,23 @@ function displayStatistics() {
             "questions-answered"
         );
 
+    const currentStreakElement =
+    document.getElementById(
+        "current-streak"
+        );
+    
+    
+    const bestStreakElement =
+        document.getElementById(
+            "best-streak"
+        );
+    
+    
+    const perfectWeeksElement =
+        document.getElementById(
+            "perfect-weeks"
+        );
+
 
     if (!completedElement) {
 
@@ -386,15 +558,23 @@ function displayStatistics() {
     // ----------------------------------------------
 
     if (quizHistory.length === 0) {
-
+    
         completedElement.textContent = "0";
-
+    
         averageElement.textContent = "0%";
-
+    
         questionsElement.textContent = "0";
-
+    
+        currentStreakElement.textContent = "0";
+    
+        bestStreakElement.textContent = "0";
+    
+        perfectWeeksElement.textContent = "0";
+    
+        displayAchievements();
+    
         return;
-
+    
     }
 
 
@@ -431,6 +611,13 @@ function displayStatistics() {
 
         );
 
+    const streakStats =
+        getStreakStats();
+    
+    
+    const perfectWeeks =
+        getPerfectWeeks();
+
 
     completedElement.textContent =
         totalQuizzes;
@@ -443,10 +630,187 @@ function displayStatistics() {
     questionsElement.textContent =
         totalQuestionsAnswered;
 
+    currentStreakElement.textContent =
+        streakStats.current;
+    
+    
+    bestStreakElement.textContent =
+        streakStats.best;
+    
+    
+    perfectWeeksElement.textContent =
+        perfectWeeks;
+
 
     displayWeeklyHistory();
 
     displayCategoryHistory();
+
+    displayAchievements();
+
+}
+
+// --------------------------------------------------
+// Display achievements
+// --------------------------------------------------
+
+function displayAchievements() {
+
+    const container =
+        document.getElementById(
+            "achievements"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    const streakStats =
+        getStreakStats();
+
+
+    const perfectWeeks =
+        getPerfectWeeks();
+
+
+    const achievements = [
+
+        {
+            icon: "🏅",
+
+            name: "First Quiz",
+
+            description:
+                "Complete your first weekly quiz.",
+
+            unlocked:
+                quizHistory.length >= 1
+
+        },
+
+
+        {
+            icon: "🔥",
+
+            name: "3 Week Streak",
+
+            description:
+                "Complete 3 consecutive weekly quizzes.",
+
+            unlocked:
+                streakStats.best >= 3
+
+        },
+
+
+        {
+            icon: "🔥",
+
+            name: "5 Week Streak",
+
+            description:
+                "Complete 5 consecutive weekly quizzes.",
+
+            unlocked:
+                streakStats.best >= 5
+
+        },
+
+
+        {
+            icon: "💯",
+
+            name: "Perfect Score",
+
+            description:
+                "Score 25 / 25 on a weekly quiz.",
+
+            unlocked:
+                perfectWeeks >= 1
+
+        },
+
+
+        {
+            icon: "📚",
+
+            name: "Quiz Veteran",
+
+            description:
+                "Complete 10 weekly quizzes.",
+
+            unlocked:
+                quizHistory.length >= 10
+
+        },
+
+
+        {
+            icon: "🏆",
+
+            name: "Perfect Month",
+
+            description:
+                "Complete 4 consecutive weekly quizzes with no missed weeks.",
+
+            unlocked:
+                streakStats.best >= 4
+
+        }
+
+    ];
+
+
+    container.innerHTML = "";
+
+
+    achievements.forEach(
+
+        achievement => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "achievement " +
+                (
+                    achievement.unlocked
+                        ? "unlocked"
+                        : "locked"
+                );
+
+
+            item.innerHTML = `
+
+                <span class="achievement-icon">
+                    ${achievement.icon}
+                </span>
+
+                <span class="achievement-name">
+                    ${achievement.name}
+                </span>
+
+                <span class="achievement-description">
+                    ${achievement.description}
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                item
+            );
+
+        }
+
+    );
 
 }
 
