@@ -446,30 +446,231 @@ function saveCompletedQuiz() {
 
         }
 
-    );
+);
 
 
     const result = {
-
+    
         week: currentQuiz.week,
-
+    
+        title: currentQuiz.title,
+    
         score: score,
-
+    
         total: totalQuestions,
-
+    
         percentage:
             Math.round(
                 (score / totalQuestions) * 100
             ),
-
+    
         completedAt:
             new Date().toISOString(),
-
+    
         categories:
             categoryResults
-
+    
     };
 
+function displayScoreChart() {
+
+    const canvas =
+        document.getElementById(
+            "score-chart"
+        );
+
+
+    if (!canvas) {
+        return;
+    }
+
+
+    if (quizHistory.length === 0) {
+        return;
+    }
+
+
+    const sortedHistory =
+        [...quizHistory].sort(
+            (a, b) => a.week - b.week
+        );
+
+
+    const labels =
+        sortedHistory.map(
+            quiz => `Week ${quiz.week}`
+        );
+
+
+    const scores =
+        sortedHistory.map(
+            quiz => quiz.percentage
+        );
+
+
+    // Remove an existing chart before
+    // creating a new one
+
+    if (window.scoreChart) {
+
+        window.scoreChart.destroy();
+
+    }
+
+
+    window.scoreChart =
+        new Chart(canvas, {
+
+            type: "line",
+
+            data: {
+
+                labels: labels,
+
+                datasets: [
+
+                    {
+
+                        label: "Score",
+
+                        data: scores,
+
+                        tension: 0.25,
+
+                        fill: false
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        min: 0,
+
+                        max: 100,
+
+                        ticks: {
+
+                            callback:
+                                value => `${value}%`
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+}
+
+function displayRecentQuizzes() {
+
+    const container =
+        document.getElementById(
+            "recent-quizzes"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    if (quizHistory.length === 0) {
+
+        container.innerHTML =
+            "<p>No completed quizzes yet.</p>";
+
+        return;
+
+    }
+
+
+    const sortedHistory =
+        [...quizHistory]
+            .sort(
+                (a, b) => b.week - a.week
+            )
+            .slice(0, 5);
+
+
+    container.innerHTML = "";
+
+
+    sortedHistory.forEach(
+
+        quiz => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "recent-quiz";
+
+
+            const title =
+                quiz.title ||
+                `Weekly Quiz`;
+
+
+            item.innerHTML = `
+
+                <div>
+
+                    <div class="recent-quiz-title">
+
+                        Week ${quiz.week}
+
+                    </div>
+
+                    <div>
+
+                        ${title}
+
+                    </div>
+
+                </div>
+
+
+                <div class="recent-quiz-score">
+
+                    ${quiz.score} /
+                    ${quiz.total}
+
+                    (${quiz.percentage}%)
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                item
+            );
+
+        }
+
+    );
+
+}
+
+    
 
     // ----------------------------------------------
     // Replace an existing result for this week
@@ -647,6 +848,10 @@ function displayStatistics() {
     displayCategoryHistory();
 
     displayAchievements();
+
+    displayScoreChart();
+
+    displayRecentQuizzes();
 
 }
 
