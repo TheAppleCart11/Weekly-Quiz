@@ -11,8 +11,6 @@ let quizHistory = [];
 
 let questionHistory = {};
 
-let quizResultSaved = false;
-
 // --------------------------------------------------
 // Determine which quiz week should be displayed
 // --------------------------------------------------
@@ -465,6 +463,127 @@ function getPerfectWeeks() {
 }
 
 // --------------------------------------------------
+// Record individual question performance
+// --------------------------------------------------
+
+function recordQuestionHistory() {
+
+    if (
+        !currentQuiz ||
+        completedQuestions !== totalQuestions
+    ) {
+        return;
+    }
+
+    let questionIndex = 0;
+
+    currentQuiz.categories.forEach(
+        category => {
+
+            category.questions.forEach(
+                question => {
+
+                    const answer =
+                        savedAnswers[
+                            questionIndex
+                        ];
+
+                    const isCorrect =
+                        answer === true;
+
+                    if (question.id) {
+
+                        if (
+                            !questionHistory[
+                                question.id
+                            ]
+                        ) {
+
+                            questionHistory[
+                                question.id
+                            ] = {
+
+                                question:
+                                    question.question,
+
+                                category:
+                                    category.name,
+
+                                difficulty:
+                                    question.difficulty,
+
+                                attempts: 0,
+
+                                correct: 0,
+
+                                incorrect: 0,
+
+                                lastAnswered:
+                                    null
+                            };
+                        }
+
+                        const history =
+                            questionHistory[
+                                question.id
+                            ];
+
+                        history.attempts++;
+
+                        if (isCorrect) {
+
+                            history.correct++;
+
+                        } else {
+
+                            history.incorrect++;
+
+                        }
+
+                        history.lastAnswered =
+                            new Date()
+                                .toISOString();
+                    }
+
+                    questionIndex++;
+
+                }
+            );
+
+        }
+    );
+
+    saveQuestionHistory();
+
+}
+
+// --------------------------------------------------
+// Check whether question history has been recorded
+// for this week's quiz
+// --------------------------------------------------
+
+function hasRecordedQuestionHistory() {
+
+    return localStorage.getItem(
+        `questionHistoryRecorded_week${currentWeek}`
+    ) === "true";
+
+}
+
+// --------------------------------------------------
+// Mark this week's question history as recorded
+// --------------------------------------------------
+
+function markQuestionHistoryRecorded() {
+
+    localStorage.setItem(
+        `questionHistoryRecorded_week${currentWeek}`,
+        "true"
+    );
+
+}
+
+// --------------------------------------------------
 // Save completed quiz result
 // --------------------------------------------------
 
@@ -612,74 +731,6 @@ function saveCompletedQuiz() {
                             ].correct++;
 
                         }
-
-                    }
-
-
-                    // ----------------------------------
-                    // Individual question performance
-                    // ----------------------------------
-
-                    if (question.id) {
-
-                        if (
-                            !questionHistory[
-                                question.id
-                            ]
-                        ) {
-
-                            questionHistory[
-                                question.id
-                            ] = {
-
-                                question:
-                                    question.question,
-
-                                category:
-                                    category.name,
-
-                                difficulty:
-                                    difficulty,
-
-                                attempts: 0,
-
-                                correct: 0,
-
-                                incorrect: 0,
-
-                                lastAnswered:
-                                    null
-
-                            };
-
-                        }
-
-
-                        const history =
-                            questionHistory[
-                                question.id
-                            ];
-
-
-                        history.attempts++;
-
-
-                        if (isCorrect) {
-
-                            history.correct++;
-
-                        }
-
-                        else {
-
-                            history.incorrect++;
-
-                        }
-
-
-                        history.lastAnswered =
-                            new Date()
-                                .toISOString();
 
                     }
 
@@ -1543,16 +1594,6 @@ function displayQuiz(quiz) {
 
     loadQuestionHistory();
 
-    quizResultSaved =
-            quizHistory.some(
-    
-                quizResult =>
-                    quizResult.week ===
-                        currentQuiz.week
-    
-            );
-    
-    
     displayStatistics();    
 
     const container =
