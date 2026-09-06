@@ -3,7 +3,7 @@ let completedQuestions = 0;
 let totalQuestions = 0;
 
 let currentWeek = 1;
-let savedAnswers = [];
+let savedAnswers = {};
 
 let currentQuiz = null;
 
@@ -569,12 +569,12 @@ function recordQuestionHistory() {
     currentQuiz.categories.forEach(
         category => {
 
-            category.questions.forEach(
+            category.SelectedQuestions.forEach(
                 question => {
 
                     const answer =
                         savedAnswers[
-                            questionIndex
+                            question.id
                         ];
 
                     const isCorrect =
@@ -741,13 +741,13 @@ function saveCompletedQuiz() {
             };
 
 
-            category.questions.forEach(
+            category.SelectedQuestions.forEach(
 
                 question => {
 
                     const answer =
                         savedAnswers[
-                            questionIndex
+                            question.id
                         ];
 
 
@@ -1303,6 +1303,199 @@ function displayStatistics() {
 
 }
 
+function selectAdaptiveQuestions(category) {
+    const recommendedDifficulty =
+        getRecommendedDifficulty(category.name);
+
+    const questions = category.selectedQuestions;
+
+    let selected = questions.filter(
+        question => question.difficulty === recommendedDifficulty
+    );
+
+    // If there are not enough questions at the recommended
+    // difficulty, use the remaining difficulties as fallbacks.
+    if (selected.length < 5) {
+
+        const fallbackOrder = {
+            "Easy": ["Medium", "Hard"],
+            "Medium": ["Easy", "Hard"],
+            "Hard": ["Medium", "Easy"]
+        };
+
+        for (const fallbackDifficulty of fallbackOrder[recommendedDifficulty]) {
+
+            const fallbackQuestions = questions.filter(
+                question =>
+                    question.difficulty === fallbackDifficulty &&
+                    !selected.some(
+                        selectedQuestion =>
+                            selectedQuestion.id === question.id
+                    )
+            );
+
+            selected = selected.concat(fallbackQuestions);
+
+            if (selected.length >= 5) {
+                break;
+            }
+        }
+    }
+
+    // Randomise the available questions.
+    selected = shuffleArray(selected);
+
+    // Return exactly five questions.
+    return selected.slice(0, 5);
+}
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [shuffled[i], shuffled[j]] =
+            [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+}
+
+function createAdaptiveQuiz() {
+    if (!currentQuiz) return;
+
+    currentQuiz.categories.forEach(category => {
+
+        const selectedQuestions =
+            selectAdaptiveQuestions(category);
+
+        category.selectedQuestions = selectedQuestions;
+    });
+
+    console.log(
+        "Adaptive quiz selected:",
+        currentQuiz.categories.map(category => ({
+            category: category.name,
+            questions: category.selectedQuestions.map(
+                question => ({
+                    id: question.id,
+                    difficulty: question.difficulty
+                })
+            )
+        }))
+    );
+}
+
+function saveSelectedQuestions() {
+    try {
+        const selectedIds = {};
+
+        currentQuiz.categories.forEach(category => {
+            selectedIds[category.name] =
+                category.selectedQuestions.map(
+                    question => question.id
+                );
+        });
+
+        localStorage.setItem(
+            `weeklyQuiz_questions_week${currentWeek}`,
+            JSON.stringify(selectedIds)
+        );
+    } catch (error) {
+        console.error(
+            "Could not save selected questions:",
+            error
+        );
+    }
+}
+
+function loadSelectedQuestions() {
+    try {
+        const saved = localStorage.getItem(
+            `weeklyQuiz_questions_week${currentWeek}`
+        );
+
+        if (!saved) {
+            return false;
+        }
+
+        const selectedIds = JSON.parse(saved);
+
+        currentQuiz.categories.forEach(category => {
+
+            const ids = selectedIds[category.name];
+
+            if (!ids) return;
+
+            category.selectedQuestions =
+                ids
+                    .map(id =>
+                        category.questions.find(
+                            question => question.id === id
+                        )
+                    )
+                    .filter(Boolean);
+        });
+
+        return true;
+
+    } catch (error) {
+        console.error(
+            "Could not load selected questions:",
+            error
+        );
+
+        return false;
+    }
+}
+
+async function loadQuiz() {
+    try {
+
+        const response =
+            await fetch(`quizzes/week${currentWeek}.json`);
+
+        if (!response.ok) {
+            throw new Error("Quiz file not found");
+        }
+
+        currentQuiz = await response.json();
+
+        totalQuestions =
+            currentQuiz.categories.length * 5;
+
+        loadSavedProgress();
+
+        loadQuestionHistory();
+
+        // Try to restore the questions already selected
+        // for this week.
+        const questionsRestored =
+            loadSelectedQuestions();
+
+        // If this is the first visit to this week's quiz,
+        // create an adaptive selection.
+        if (!questionsRestored) {
+            createAdaptiveQuiz();
+            saveSelectedQuestions();
+        }
+
+        displayQuiz();
+
+        updateScore();
+
+        displayStatistics();
+
+    } catch (error) {
+
+        console.error("Error loading quiz:", error);
+
+        document.getElementById("quiz-container").innerHTML =
+            "<p>Quiz unavailable.</p>";
+    }
+}
+
 // --------------------------------------------------
 // Display achievements
 // --------------------------------------------------
@@ -1682,15 +1875,42 @@ function displayCategoryHistory() {
 // --------------------------------------------------
 
 function saveProgress() {
+    try {
+        localStorage.setItem(
+            `weeklyQuiz_week${currentWeek}`,
+            JSON.stringify(savedAnswers)
+        );
+    } catch (error) {
+        console.error("Could not save quiz progress:", error);
+    }
+}
 
-    localStorage.setItem(
 
-        `weeklyQuiz_week${currentWeek}`,
+function loadSavedProgress() {
+    try {
+        const saved = localStorage.getItem(
+            `weeklyQuiz_week${currentWeek}`
+        );
 
-        JSON.stringify(savedAnswers)
+        if (saved) {
+            const parsed = JSON.parse(saved);
 
-    );
-
+            if (
+                parsed &&
+                typeof parsed === "object" &&
+                !Array.isArray(parsed)
+            ) {
+                savedAnswers = parsed;
+            } else {
+                savedAnswers = {};
+            }
+        } else {
+            savedAnswers = {};
+        }
+    } catch (error) {
+        console.error("Could not load saved progress:", error);
+        savedAnswers = {};
+    }
 }
 
 
@@ -1760,7 +1980,7 @@ function displayQuiz(quiz) {
             );
 
 
-            category.questions.forEach(
+            category.SelectedQuestions.forEach(
 
                 question => {
 
