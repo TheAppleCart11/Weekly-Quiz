@@ -942,44 +942,6 @@ function saveCompletedQuiz() {
     displayStatistics();
 
 }
-    // ----------------------------------------------
-    // Replace existing weekly result
-    // ----------------------------------------------
-
-    const existingIndex =
-        quizHistory.findIndex(
-
-            quiz =>
-                quiz.week ===
-                currentQuiz.week
-
-        );
-
-
-    if (existingIndex >= 0) {
-
-        quizHistory[
-            existingIndex
-        ] = result;
-
-    }
-
-    else {
-
-        quizHistory.push(
-            result
-        );
-
-    }
-
-
-    saveQuizHistory();
-
-    saveQuestionHistory();
-
-    displayStatistics();
-
-}
 
 // --------------------------------------------------
 // Display score chart
