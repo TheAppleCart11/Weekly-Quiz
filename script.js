@@ -446,31 +446,70 @@ function saveCompletedQuiz() {
 
         }
 
-);
+    );
 
 
     const result = {
-    
+
         week: currentQuiz.week,
-    
+
         title: currentQuiz.title,
-    
+
         score: score,
-    
+
         total: totalQuestions,
-    
+
         percentage:
             Math.round(
                 (score / totalQuestions) * 100
             ),
-    
+
         completedAt:
             new Date().toISOString(),
-    
+
         categories:
             categoryResults
-    
+
     };
+
+
+    // ----------------------------------------------
+    // Replace an existing result for this week
+    // ----------------------------------------------
+
+    const existingIndex =
+        quizHistory.findIndex(
+
+            quiz =>
+                quiz.week === currentQuiz.week
+
+        );
+
+
+    if (existingIndex >= 0) {
+
+        quizHistory[
+            existingIndex
+        ] = result;
+
+    }
+
+    else {
+
+        quizHistory.push(result);
+
+    }
+
+
+    saveQuizHistory();
+
+    displayStatistics();
+
+}
+
+// --------------------------------------------------
+// Display score chart
+// --------------------------------------------------
 
 function displayScoreChart() {
 
@@ -576,6 +615,10 @@ function displayScoreChart() {
 
 }
 
+// --------------------------------------------------
+// Display recent quizzes
+// --------------------------------------------------
+
 function displayRecentQuizzes() {
 
     const container =
@@ -626,7 +669,7 @@ function displayRecentQuizzes() {
 
             const title =
                 quiz.title ||
-                `Weekly Quiz`;
+                "Weekly Quiz";
 
 
             item.innerHTML = `
@@ -667,42 +710,6 @@ function displayRecentQuizzes() {
         }
 
     );
-
-}
-
-    
-
-    // ----------------------------------------------
-    // Replace an existing result for this week
-    // ----------------------------------------------
-
-    const existingIndex =
-        quizHistory.findIndex(
-
-            quiz =>
-                quiz.week === currentQuiz.week
-
-        );
-
-
-    if (existingIndex >= 0) {
-
-        quizHistory[
-            existingIndex
-        ] = result;
-
-    }
-
-    else {
-
-        quizHistory.push(result);
-
-    }
-
-
-    saveQuizHistory();
-
-    displayStatistics();
 
 }
 
