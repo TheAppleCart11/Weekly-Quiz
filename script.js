@@ -1931,14 +1931,9 @@ function updateScore() {
 
     if (
     completedQuestions === totalQuestions &&
-    totalQuestions > 0 &&
-    !quizResultSaved
+    totalQuestions > 0
 ) {
-
     saveCompletedQuiz();
-
-    quizResultSaved = true;
-
 }
     const progressText =
         document.getElementById(
