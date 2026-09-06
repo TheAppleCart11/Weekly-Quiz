@@ -1307,7 +1307,7 @@ function selectAdaptiveQuestions(category) {
     const recommendedDifficulty =
         getRecommendedDifficulty(category.name);
 
-    const questions = category.selectedQuestions;
+    const questions = category.questions;
 
     let selected = questions.filter(
         question => question.difficulty === recommendedDifficulty
