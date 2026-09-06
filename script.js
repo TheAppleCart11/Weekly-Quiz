@@ -1481,7 +1481,7 @@ async function loadQuiz() {
             saveSelectedQuestions();
         }
 
-        displayQuiz();
+        displayQuiz(currentQuiz);
 
         updateScore();
 
