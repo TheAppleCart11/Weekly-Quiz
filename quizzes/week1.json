@@ -25,6 +25,18 @@
           "difficulty": "Easy"
         },
         {
+          "id": "electrical-engineering-006",
+          "question": "What unit is used to measure electrical resistance?",
+          "answer": "Ohms (Ω).",
+          "difficulty": "Easy"
+        },
+        {
+          "id": "electrical-engineering-007",
+          "question": "What is the relationship between voltage, current and resistance described by Ohm's law?",
+          "answer": "V = I × R.",
+          "difficulty": "Easy"
+        },
+        {
           "id": "electrical-engineering-004",
           "question": "What happens to the synchronous speed of an induction motor when the supply frequency increases?",
           "answer": "The synchronous speed increases.",
@@ -35,6 +47,54 @@
           "question": "Why is a flyback diode commonly connected across a DC relay coil?",
           "answer": "To provide a path for the coil's stored energy when the coil is switched off, reducing the voltage spike that could damage the switching device.",
           "difficulty": "Medium"
+        },
+        {
+          "id": "electrical-engineering-008",
+          "question": "What is the main purpose of a circuit breaker in an electrical installation?",
+          "answer": "To automatically interrupt the circuit when excessive current, such as from an overload or short circuit, occurs.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "electrical-engineering-009",
+          "question": "Why are capacitors commonly used in DC power supplies?",
+          "answer": "They store electrical energy and help smooth voltage variations and ripple after rectification.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "electrical-engineering-010",
+          "question": "What is power factor in an AC electrical system?",
+          "answer": "The ratio of real power to apparent power, indicating how effectively electrical power is being converted into useful work.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "electrical-engineering-011",
+          "question": "Why does an induction motor rotor normally run slightly slower than synchronous speed?",
+          "answer": "A difference in speed is required to produce relative motion between the rotating magnetic field and rotor conductors, which induces rotor current and produces torque.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "electrical-engineering-012",
+          "question": "What is the purpose of negative feedback in a control system?",
+          "answer": "It compares the output with the desired reference and uses the difference to reduce error and improve system stability and regulation.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "electrical-engineering-013",
+          "question": "What is the significance of the damping ratio in a second-order control system?",
+          "answer": "It describes how oscillations decay and indicates whether the system is underdamped, critically damped or overdamped.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "electrical-engineering-014",
+          "question": "Why can a long transmission line have significant reactive power effects even when its load is mainly resistive?",
+          "answer": "The line has distributed inductance and capacitance, which store and exchange reactive energy and can affect voltage and reactive power flow.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "electrical-engineering-015",
+          "question": "What is the purpose of a phase-locked loop (PLL) in power electronics or communication systems?",
+          "answer": "It tracks the phase and frequency of an input signal by adjusting an internal oscillator so that it remains synchronised with the reference.",
+          "difficulty": "Hard"
         }
       ]
     },
@@ -60,6 +120,18 @@
           "difficulty": "Easy"
         },
         {
+          "id": "technology-006",
+          "question": "What does USB stand for?",
+          "answer": "Universal Serial Bus.",
+          "difficulty": "Easy"
+        },
+        {
+          "id": "technology-007",
+          "question": "What is the primary purpose of an operating system?",
+          "answer": "To manage computer hardware and software resources and provide services for applications and users.",
+          "difficulty": "Easy"
+        },
+        {
           "id": "technology-004",
           "question": "What does API stand for in software development?",
           "answer": "Application Programming Interface.",
@@ -70,6 +142,54 @@
           "question": "What is the fundamental difference between RAM and storage such as an SSD?",
           "answer": "RAM is fast, temporary working memory used while programs are running, whereas SSD storage retains data when power is removed.",
           "difficulty": "Medium"
+        },
+        {
+          "id": "technology-008",
+          "question": "What is the purpose of DNS on the internet?",
+          "answer": "DNS translates human-readable domain names into IP addresses that computers can use to locate network services.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "technology-009",
+          "question": "What is the main difference between Wi-Fi and Bluetooth?",
+          "answer": "Wi-Fi is generally designed for higher-speed network connectivity over a larger range, while Bluetooth is designed for short-range, lower-power device-to-device communication.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "technology-010",
+          "question": "What is cloud computing?",
+          "answer": "The delivery of computing resources such as storage, processing and software services over a network, typically using remote data centres.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "technology-011",
+          "question": "What is the difference between symmetric and asymmetric encryption?",
+          "answer": "Symmetric encryption uses the same secret key for encryption and decryption, while asymmetric encryption uses a mathematically related public and private key pair.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "technology-012",
+          "question": "What is a database index and why can it improve query performance?",
+          "answer": "An index is a data structure that helps a database locate records more efficiently without scanning every row in the table.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "technology-013",
+          "question": "What is the purpose of a compiler?",
+          "answer": "A compiler translates source code written in a programming language into another form, commonly machine code or an intermediate representation that can be executed.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "technology-014",
+          "question": "What is overfitting in machine learning?",
+          "answer": "Overfitting occurs when a model learns the training data too closely, including noise or peculiarities, and therefore performs poorly on previously unseen data.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "technology-015",
+          "question": "What is the purpose of a version control system such as Git?",
+          "answer": "It records changes to files over time, allowing developers to track modifications, collaborate, create branches and restore earlier versions.",
+          "difficulty": "Hard"
         }
       ]
     },
@@ -95,16 +215,76 @@
           "difficulty": "Easy"
         },
         {
+          "id": "australia-005",
+          "question": "Which Australian city hosted the 2000 Summer Olympics?",
+          "answer": "Sydney.",
+          "difficulty": "Easy"
+        },
+        {
+          "id": "australia-006",
+          "question": "What is the national capital of Australia?",
+          "answer": "Canberra.",
+          "difficulty": "Easy"
+        },
+        {
+          "id": "australia-007",
+          "question": "What is the approximate population of Australia?",
+          "answer": "Approximately 27 million people.",
+          "difficulty": "Medium"
+        },
+        {
           "id": "australia-004",
           "question": "What is the approximate length of Australia's Great Barrier Reef?",
           "answer": "About 2,300 kilometres.",
           "difficulty": "Medium"
         },
         {
-          "id": "australia-005",
-          "question": "Which Australian city hosted the 2000 Summer Olympics?",
-          "answer": "Sydney.",
-          "difficulty": "Easy"
+          "id": "australia-008",
+          "question": "Which Australian state or territory contains Uluru?",
+          "answer": "The Northern Territory.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "australia-009",
+          "question": "What is the name of the strait separating Tasmania from mainland Australia?",
+          "answer": "Bass Strait.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "australia-010",
+          "question": "Which Australian city is located on the Swan River?",
+          "answer": "Perth.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "australia-011",
+          "question": "Why does Australia have relatively low population density despite being one of the world's largest countries by land area?",
+          "answer": "Much of Australia's interior is arid or semi-arid and has limited water resources, so most of the population is concentrated around the coastal regions.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "australia-012",
+          "question": "What geological process formed much of the Great Dividing Range?",
+          "answer": "It developed through a combination of geological uplift, volcanic activity and erosion over very long periods rather than from a single mountain-building event.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "australia-013",
+          "question": "Why is Australia's native flora particularly adapted to bushfire?",
+          "answer": "Many Australian plants evolved under recurring fire conditions, with adaptations such as fire-resistant structures, protected buds, epicormic growth and seeds that are stimulated to germinate by fire.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "australia-014",
+          "question": "What is the significance of the Murray-Darling Basin to Australia?",
+          "answer": "It is Australia's largest river basin and is highly important for agriculture, water supply, ecosystems and communities across several states and territories.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "australia-015",
+          "question": "Why are Australia's eastern coastal regions generally much wetter than much of the interior?",
+          "answer": "Moisture from the surrounding oceans, prevailing weather systems and the Great Dividing Range contribute to greater rainfall along many eastern and southeastern coastal regions, while the interior is much drier.",
+          "difficulty": "Hard"
         }
       ]
     },
@@ -130,15 +310,75 @@
           "difficulty": "Easy"
         },
         {
+          "id": "science-nature-006",
+          "question": "How many planets are in the Solar System?",
+          "answer": "Eight.",
+          "difficulty": "Easy"
+        },
+        {
+          "id": "science-nature-007",
+          "question": "What force keeps objects attracted to Earth?",
+          "answer": "Gravity.",
+          "difficulty": "Easy"
+        },
+        {
           "id": "science-nature-004",
           "question": "What is the approximate speed of light in a vacuum?",
           "answer": "Approximately 300,000 kilometres per second.",
           "difficulty": "Medium"
         },
         {
+          "id": "science-nature-008",
+          "question": "What is the chemical symbol for sodium?",
+          "answer": "Na.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "science-nature-009",
+          "question": "What is the main function of red blood cells?",
+          "answer": "To transport oxygen around the body, primarily using haemoglobin.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "science-nature-010",
+          "question": "What is the difference between mass and weight?",
+          "answer": "Mass is the amount of matter in an object, while weight is the force exerted on that mass by gravity.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "science-nature-011",
+          "question": "What is the difference between weather and climate?",
+          "answer": "Weather describes short-term atmospheric conditions, while climate describes long-term patterns and averages over much longer periods.",
+          "difficulty": "Medium"
+        },
+        {
           "id": "science-nature-005",
           "question": "Why does ice float on liquid water?",
           "answer": "Solid water has a lower density than liquid water because of the structure formed by hydrogen bonding in ice.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "science-nature-012",
+          "question": "Why does increasing temperature generally increase the electrical resistance of a metal?",
+          "answer": "Higher temperature causes the metal's lattice ions to vibrate more strongly, increasing collisions with conducting electrons and therefore increasing resistance.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "science-nature-013",
+          "question": "What is entropy in thermodynamics?",
+          "answer": "Entropy is a thermodynamic quantity associated with the distribution of energy and the number of microscopic states available to a system; the entropy of an isolated system tends not to decrease.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "science-nature-014",
+          "question": "Why does the sky appear blue during the day?",
+          "answer": "Shorter wavelengths of sunlight, particularly blue light, are scattered more strongly by molecules in Earth's atmosphere than longer wavelengths.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "science-nature-015",
+          "question": "What is the difference between mitosis and meiosis?",
+          "answer": "Mitosis generally produces two genetically similar daughter cells, while meiosis involves two rounds of division and produces genetically varied cells with half the chromosome number.",
           "difficulty": "Hard"
         }
       ]
@@ -171,9 +411,69 @@
           "difficulty": "Easy"
         },
         {
+          "id": "history-geography-006",
+          "question": "What is the largest ocean on Earth?",
+          "answer": "The Pacific Ocean.",
+          "difficulty": "Easy"
+        },
+        {
+          "id": "history-geography-007",
+          "question": "Which river flows through Egypt and is one of the world's longest rivers?",
+          "answer": "The Nile River.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "history-geography-008",
+          "question": "Which country has the largest population in South America?",
+          "answer": "Brazil.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "history-geography-009",
+          "question": "What event is generally considered to have marked the beginning of the French Revolution in 1789?",
+          "answer": "The storming of the Bastille on 14 July 1789 is commonly used as a symbolic starting point.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "history-geography-010",
+          "question": "Which ancient city was destroyed by the eruption of Mount Vesuvius in AD 79?",
+          "answer": "Pompeii.",
+          "difficulty": "Medium"
+        },
+        {
+          "id": "history-geography-011",
+          "question": "What was the primary purpose of the Silk Road?",
+          "answer": "It was a network of trade routes connecting regions of Asia, the Middle East and Europe, facilitating the exchange of goods, ideas and culture.",
+          "difficulty": "Medium"
+        },
+        {
           "id": "history-geography-005",
           "question": "Which empire was ruled by Julius Caesar before the Roman Empire formally became an empire?",
           "answer": "The Roman Republic. Caesar was a leading figure during the final period of the Roman Republic.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "history-geography-012",
+          "question": "Why was the Industrial Revolution able to begin in Britain?",
+          "answer": "Several factors contributed, including accessible coal and iron resources, capital, expanding trade, agricultural changes, technological innovation and institutions that supported investment and commerce.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "history-geography-013",
+          "question": "What was the significance of the Magna Carta?",
+          "answer": "The 1215 charter placed certain limits on the English king's authority and became an important historical influence on concepts of the rule of law and limits on government power.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "history-geography-014",
+          "question": "Why are time zones approximately based on 15 degrees of longitude?",
+          "answer": "Earth rotates approximately 360 degrees in 24 hours, giving an average of 15 degrees of longitude per hour.",
+          "difficulty": "Hard"
+        },
+        {
+          "id": "history-geography-015",
+          "question": "What caused the formation of the Himalayas?",
+          "answer": "The Himalayas formed primarily from the collision of the Indian tectonic plate with the Eurasian plate, which compressed and uplifted Earth's crust.",
           "difficulty": "Hard"
         }
       ]
