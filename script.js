@@ -682,9 +682,7 @@ function saveCompletedQuiz() {
         !currentQuiz ||
         completedQuestions !== totalQuestions
     ) {
-
         return;
-
     }
 
 
@@ -886,6 +884,64 @@ function saveCompletedQuiz() {
     };
 
 
+    // --------------------------------------------------
+    // Update existing result for this week,
+    // or add a new one
+    // --------------------------------------------------
+
+    const existingResultIndex =
+        quizHistory.findIndex(
+            quizResult =>
+                quizResult.week ===
+                currentQuiz.week
+        );
+
+
+    if (existingResultIndex !== -1) {
+
+        quizHistory[
+            existingResultIndex
+        ] = result;
+
+    } else {
+
+        quizHistory.push(
+            result
+        );
+
+    }
+
+
+    // --------------------------------------------------
+    // Save weekly quiz history
+    // --------------------------------------------------
+
+    saveQuizHistory();
+
+
+    // --------------------------------------------------
+    // Record individual question history only once
+    // for this weekly quiz
+    // --------------------------------------------------
+
+    if (
+        !hasRecordedQuestionHistory()
+    ) {
+
+        recordQuestionHistory();
+
+        markQuestionHistoryRecorded();
+
+    }
+
+
+    // --------------------------------------------------
+    // Refresh statistics display
+    // --------------------------------------------------
+
+    displayStatistics();
+
+}
     // ----------------------------------------------
     // Replace existing weekly result
     // ----------------------------------------------
@@ -2065,11 +2121,11 @@ function updateQuestionAppearance(
 function updateScore() {
 
     if (
-    completedQuestions === totalQuestions &&
-    totalQuestions > 0
-) {
-    saveCompletedQuiz();
-}
+        completedQuestions === totalQuestions &&
+        totalQuestions > 0
+    ) {
+        saveCompletedQuiz();
+    }
     const progressText =
         document.getElementById(
             "progress-text"
