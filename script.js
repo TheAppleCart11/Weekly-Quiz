@@ -9,6 +9,9 @@ let currentQuiz = null;
 
 let quizHistory = [];
 
+let questionHistory = {};
+
+let quizResultSaved = false;
 
 // --------------------------------------------------
 // Determine which quiz week should be displayed
@@ -229,6 +232,84 @@ function saveQuizHistory() {
 }
 
 // --------------------------------------------------
+// Load individual question history
+// --------------------------------------------------
+
+function loadQuestionHistory() {
+
+    const saved =
+        localStorage.getItem(
+            "questionHistory"
+        );
+
+
+    if (!saved) {
+
+        questionHistory = {};
+
+        return;
+
+    }
+
+
+    try {
+
+        const parsed =
+            JSON.parse(saved);
+
+
+        if (
+            parsed &&
+            typeof parsed === "object" &&
+            !Array.isArray(parsed)
+        ) {
+
+            questionHistory = parsed;
+
+        }
+
+        else {
+
+            questionHistory = {};
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Question history was invalid and has been reset."
+        );
+
+        questionHistory = {};
+
+        localStorage.removeItem(
+            "questionHistory"
+        );
+
+    }
+
+}
+
+
+// --------------------------------------------------
+// Save individual question history
+// --------------------------------------------------
+
+function saveQuestionHistory() {
+
+    localStorage.setItem(
+
+        "questionHistory",
+
+        JSON.stringify(questionHistory)
+
+    );
+
+}
+
+// --------------------------------------------------
 // Calculate streak statistics
 // --------------------------------------------------
 
@@ -401,6 +482,25 @@ function saveCompletedQuiz() {
 
     const categoryResults = {};
 
+    const difficultyResults = {
+
+        Easy: {
+            correct: 0,
+            total: 0
+        },
+
+        Medium: {
+            correct: 0,
+            total: 0
+        },
+
+        Hard: {
+            correct: 0,
+            total: 0
+        }
+
+    };
+
 
     let questionIndex = 0;
 
@@ -409,23 +509,180 @@ function saveCompletedQuiz() {
 
         category => {
 
-            let correct = 0;
+            let categoryCorrect = 0;
 
-            let total = category.questions.length;
+            const categoryTotal =
+                category.questions.length;
+
+
+            const categoryDifficulties = {
+
+                Easy: {
+                    correct: 0,
+                    total: 0
+                },
+
+                Medium: {
+                    correct: 0,
+                    total: 0
+                },
+
+                Hard: {
+                    correct: 0,
+                    total: 0
+                }
+
+            };
 
 
             category.questions.forEach(
 
-                () => {
+                question => {
 
-                    if (
-                        savedAnswers[questionIndex]
-                        === true
-                    ) {
+                    const answer =
+                        savedAnswers[
+                            questionIndex
+                        ];
 
-                        correct++;
+
+                    const difficulty =
+                        question.difficulty;
+
+
+                    const isCorrect =
+                        answer === true;
+
+
+                    // ----------------------------------
+                    // Category score
+                    // ----------------------------------
+
+                    if (isCorrect) {
+
+                        categoryCorrect++;
 
                     }
+
+
+                    // ----------------------------------
+                    // Overall difficulty performance
+                    // ----------------------------------
+
+                    if (
+                        difficultyResults[
+                            difficulty
+                        ]
+                    ) {
+
+                        difficultyResults[
+                            difficulty
+                        ].total++;
+
+
+                        if (isCorrect) {
+
+                            difficultyResults[
+                                difficulty
+                            ].correct++;
+
+                        }
+
+                    }
+
+
+                    // ----------------------------------
+                    // Category + difficulty performance
+                    // ----------------------------------
+
+                    if (
+                        categoryDifficulties[
+                            difficulty
+                        ]
+                    ) {
+
+                        categoryDifficulties[
+                            difficulty
+                        ].total++;
+
+
+                        if (isCorrect) {
+
+                            categoryDifficulties[
+                                difficulty
+                            ].correct++;
+
+                        }
+
+                    }
+
+
+                    // ----------------------------------
+                    // Individual question performance
+                    // ----------------------------------
+
+                    if (question.id) {
+
+                        if (
+                            !questionHistory[
+                                question.id
+                            ]
+                        ) {
+
+                            questionHistory[
+                                question.id
+                            ] = {
+
+                                question:
+                                    question.question,
+
+                                category:
+                                    category.name,
+
+                                difficulty:
+                                    difficulty,
+
+                                attempts: 0,
+
+                                correct: 0,
+
+                                incorrect: 0,
+
+                                lastAnswered:
+                                    null
+
+                            };
+
+                        }
+
+
+                        const history =
+                            questionHistory[
+                                question.id
+                            ];
+
+
+                        history.attempts++;
+
+
+                        if (isCorrect) {
+
+                            history.correct++;
+
+                        }
+
+                        else {
+
+                            history.incorrect++;
+
+                        }
+
+
+                        history.lastAnswered =
+                            new Date()
+                                .toISOString();
+
+                    }
+
 
                     questionIndex++;
 
@@ -438,9 +695,14 @@ function saveCompletedQuiz() {
                 category.name
             ] = {
 
-                correct: correct,
+                correct:
+                    categoryCorrect,
 
-                total: total
+                total:
+                    categoryTotal,
+
+                difficulties:
+                    categoryDifficulties
 
             };
 
@@ -451,37 +713,49 @@ function saveCompletedQuiz() {
 
     const result = {
 
-        week: currentQuiz.week,
+        week:
+            currentQuiz.week,
 
-        title: currentQuiz.title,
+        title:
+            currentQuiz.title,
 
-        score: score,
+        score:
+            score,
 
-        total: totalQuestions,
+        total:
+            totalQuestions,
 
         percentage:
             Math.round(
-                (score / totalQuestions) * 100
+                (
+                    score /
+                    totalQuestions
+                ) * 100
             ),
 
         completedAt:
-            new Date().toISOString(),
+            new Date()
+                .toISOString(),
 
         categories:
-            categoryResults
+            categoryResults,
+
+        difficulties:
+            difficultyResults
 
     };
 
 
     // ----------------------------------------------
-    // Replace an existing result for this week
+    // Replace existing weekly result
     // ----------------------------------------------
 
     const existingIndex =
         quizHistory.findIndex(
 
             quiz =>
-                quiz.week === currentQuiz.week
+                quiz.week ===
+                currentQuiz.week
 
         );
 
@@ -496,12 +770,16 @@ function saveCompletedQuiz() {
 
     else {
 
-        quizHistory.push(result);
+        quizHistory.push(
+            result
+        );
 
     }
 
 
     saveQuizHistory();
+
+    saveQuestionHistory();
 
     displayStatistics();
 
@@ -1263,6 +1541,18 @@ function displayQuiz(quiz) {
 
     loadQuizHistory();
 
+    loadQuestionHistory();
+
+    quizResultSaved =
+            quizHistory.some(
+    
+                quizResult =>
+                    quizResult.week ===
+                        currentQuiz.week
+    
+            );
+    
+    
     displayStatistics();    
 
     const container =
@@ -1641,12 +1931,15 @@ function updateScore() {
 
     if (
     completedQuestions === totalQuestions &&
-    totalQuestions > 0
-    ) {
+    totalQuestions > 0 &&
+    !quizResultSaved
+) {
 
     saveCompletedQuiz();
 
-    }
+    quizResultSaved = true;
+
+}
     const progressText =
         document.getElementById(
             "progress-text"
