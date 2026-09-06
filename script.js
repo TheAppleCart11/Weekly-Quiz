@@ -308,6 +308,95 @@ function saveQuestionHistory() {
 }
 
 // --------------------------------------------------
+// Calculate adaptive difficulty recommendation
+// --------------------------------------------------
+
+function getRecommendedDifficulty(
+    categoryName
+) {
+
+    const categoryQuestions =
+        Object.values(questionHistory)
+            .filter(
+                question =>
+                    question.category ===
+                    categoryName
+            );
+
+    if (
+        categoryQuestions.length === 0
+    ) {
+        return "Medium";
+    }
+
+    let attempts = 0;
+    let correct = 0;
+
+    categoryQuestions.forEach(
+        question => {
+
+            attempts +=
+                question.attempts;
+
+            correct +=
+                question.correct;
+
+        }
+    );
+
+    if (attempts === 0) {
+        return "Medium";
+    }
+
+    const accuracy =
+        correct / attempts;
+
+    // Very strong performance
+    if (accuracy >= 0.85) {
+        return "Hard";
+    }
+
+    // Moderate performance
+    if (accuracy >= 0.65) {
+        return "Medium";
+    }
+
+    // Needs reinforcement
+    return "Easy";
+
+}
+
+// --------------------------------------------------
+// Get adaptive difficulty recommendations
+// for every category
+// --------------------------------------------------
+
+function getAdaptiveRecommendations() {
+
+    const recommendations = {};
+
+    if (!currentQuiz) {
+        return recommendations;
+    }
+
+    currentQuiz.categories.forEach(
+        category => {
+
+            recommendations[
+                category.name
+            ] =
+                getRecommendedDifficulty(
+                    category.name
+                );
+
+        }
+    );
+
+    return recommendations;
+
+}
+
+// --------------------------------------------------
 // Calculate streak statistics
 // --------------------------------------------------
 
@@ -1086,6 +1175,11 @@ function displayStatistics() {
     if (!completedElement) {
 
         return;
+
+    console.log(
+        "Adaptive difficulty:",
+        getAdaptiveRecommendations()
+    );
 
     }
 
