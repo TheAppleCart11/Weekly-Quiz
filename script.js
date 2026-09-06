@@ -1194,11 +1194,6 @@ function displayStatistics() {
 
         return;
 
-    console.log(
-        "Adaptive difficulty:",
-        getAdaptiveRecommendations()
-    );
-
     }
 
 
@@ -1300,6 +1295,11 @@ function displayStatistics() {
     displayScoreChart();
 
     displayRecentQuizzes();
+
+    console.log(
+        "Adaptive difficulty:",
+        getAdaptiveRecommendations()
+    );
 
 }
 
