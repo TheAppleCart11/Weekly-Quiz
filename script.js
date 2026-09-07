@@ -455,7 +455,7 @@ function recordQuestionHistory() {
     currentQuiz.categories.forEach(
         category => {
 
-            category.SelectedQuestions.forEach(
+            category.selectedQuestions.forEach(
                 question => {
 
                     const answer =
@@ -594,9 +594,6 @@ function saveCompletedQuiz() {
     };
 
 
-    let questionIndex = 0;
-
-
     currentQuiz.categories.forEach(
 
         category => {
@@ -604,7 +601,7 @@ function saveCompletedQuiz() {
             let categoryCorrect = 0;
 
             const categoryTotal =
-                category.questions.length;
+                category.selectedQuestions.length;
 
 
             const categoryDifficulties = {
@@ -627,7 +624,7 @@ function saveCompletedQuiz() {
             };
 
 
-            category.SelectedQuestions.forEach(
+            category.selectedQuestions.forEach(
 
                 question => {
 
@@ -707,8 +704,6 @@ function saveCompletedQuiz() {
 
                     }
 
-
-                    questionIndex++;
 
                 }
 
@@ -1868,12 +1863,11 @@ function displayQuiz(quiz) {
             );
 
 
-            category.SelectedQuestions.forEach(
+            category.selectedQuestions.forEach(
 
                 question => {
 
-                    const questionNumber =
-                        totalQuestions;
+                    const questionId = question.id;
 
                     totalQuestions++;
 
@@ -1955,7 +1949,7 @@ function displayQuiz(quiz) {
 
                     const saved =
                         savedAnswers[
-                            questionNumber
+                            questionId
                         ];
 
                     if (
@@ -2007,7 +2001,7 @@ function displayQuiz(quiz) {
 
                                     setQuestionResult(
 
-                                        questionNumber,
+                                        questionId,
 
                                         isCorrect,
 
@@ -2052,13 +2046,13 @@ function displayQuiz(quiz) {
 // --------------------------------------------------
 
 function setQuestionResult(
-    questionNumber,
+    questionId,
     isCorrect,
     questionCard
 ) {
 
     const previousAnswer =
-        savedAnswers[questionNumber];
+        savedAnswers[questionId];
 
 
     // ----------------------------------------------
@@ -2091,7 +2085,7 @@ function setQuestionResult(
     // Save new answer
     // ----------------------------------------------
 
-    savedAnswers[questionNumber] =
+    savedAnswers[questionId] =
         isCorrect;
 
 
