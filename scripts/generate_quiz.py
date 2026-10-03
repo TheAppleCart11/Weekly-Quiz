@@ -2,8 +2,10 @@
 
 import json
 import os
+import random
 import re
 import sys
+import time
 
 from datetime import date, timedelta
 from pathlib import Path
@@ -29,6 +31,28 @@ DIFFICULTIES = {
     "Easy",
     "Medium",
     "Hard"
+}
+
+
+# --------------------------------------------------
+# Retry configuration
+# --------------------------------------------------
+
+# Maximum number of API requests for one quiz generation.
+# This includes the initial attempt.
+MAX_ATTEMPTS = 3
+
+# Initial delay before the first retry.
+INITIAL_RETRY_DELAY = 30
+
+# Temporary HTTP errors that are safe to retry.
+RETRYABLE_STATUS_CODES = {
+    408,
+    429,
+    500,
+    502,
+    503,
+    504
 }
 
 
@@ -220,7 +244,7 @@ Use it only to avoid repetition:
 
 
 # --------------------------------------------------
-# Call Gemini
+# Call Gemini with bounded retry/backoff
 # --------------------------------------------------
 
 def call_gemini(
@@ -280,79 +304,197 @@ def call_gemini(
     }
 
 
-    request = Request(
+    for attempt in range(
+        1,
+        MAX_ATTEMPTS + 1
+    ):
 
-        url,
+        request = Request(
 
-        data=json.dumps(
-            payload
-        ).encode(),
+            url,
 
-        headers={
-            "Content-Type":
-                "application/json"
-        },
+            data=json.dumps(
+                payload
+            ).encode(),
 
-        method="POST"
+            headers={
+                "Content-Type":
+                    "application/json"
+            },
 
-    )
+            method="POST"
+
+        )
 
 
-    try:
+        try:
 
-        with urlopen(
-            request,
-            timeout=120
-        ) as response:
-
-            data = json.load(
-                response
+            print(
+                f"Gemini API attempt "
+                f"{attempt}/{MAX_ATTEMPTS}"
             )
 
 
-    except HTTPError as exc:
+            with urlopen(
+                request,
+                timeout=120
+            ) as response:
 
-        body = exc.read().decode(
-            errors="replace"
-        )
-
-
-        raise RuntimeError(
-            f"Gemini API request failed "
-            f"({exc.code}): {body}"
-        ) from exc
+                data = json.load(
+                    response
+                )
 
 
-    try:
+            try:
 
-        text = (
-            data[
-                "candidates"
-            ][0][
-                "content"
-            ][
-                "parts"
-            ][0][
-                "text"
-            ]
-        )
-
-
-        return json.loads(
-            text
-        )
+                text = (
+                    data[
+                        "candidates"
+                    ][0][
+                        "content"
+                    ][
+                        "parts"
+                    ][0][
+                        "text"
+                    ]
+                )
 
 
-    except (
-        KeyError,
-        IndexError,
-        TypeError,
-        json.JSONDecodeError
-    ) as exc:
+                return json.loads(
+                    text
+                )
 
-        raise RuntimeError(
-            f"Gemini returned invalid JSON: {data}"
-        ) from exc
+
+            except (
+                KeyError,
+                IndexError,
+                TypeError,
+                json.JSONDecodeError
+            ) as exc:
+
+                raise RuntimeError(
+                    f"Gemini returned invalid JSON: {data}"
+                ) from exc
+
+
+        except HTTPError as exc:
+
+            body = exc.read().decode(
+                errors="replace"
+            )
+
+
+            print(
+                f"Gemini API returned HTTP "
+                f"{exc.code}."
+            )
+
+
+            # Only retry temporary errors.
+
+            if (
+                exc.code
+                not in RETRYABLE_STATUS_CODES
+            ):
+
+                raise RuntimeError(
+                    f"Gemini API request failed "
+                    f"({exc.code}): {body}"
+                ) from exc
+
+
+            # If this was the final attempt,
+            # stop rather than retrying indefinitely.
+
+            if attempt >= MAX_ATTEMPTS:
+
+                raise RuntimeError(
+                    f"Gemini API request failed "
+                    f"after {MAX_ATTEMPTS} attempts "
+                    f"({exc.code}): {body}"
+                ) from exc
+
+
+            # Exponential backoff:
+            #
+            # Attempt 1 fails -> ~30 sec
+            # Attempt 2 fails -> ~60 sec
+            #
+            # Small jitter prevents all retries
+            # occurring at exactly the same time.
+
+            base_delay = (
+                INITIAL_RETRY_DELAY
+                *
+                (2 ** (attempt - 1))
+            )
+
+
+            jitter = random.uniform(
+                0,
+                10
+            )
+
+
+            delay = (
+                base_delay
+                +
+                jitter
+            )
+
+
+            print(
+                f"Temporary Gemini error "
+                f"({exc.code}). "
+                f"Retrying in "
+                f"{delay:.1f} seconds..."
+            )
+
+
+            time.sleep(
+                delay
+            )
+
+
+        except TimeoutError as exc:
+
+            if attempt >= MAX_ATTEMPTS:
+
+                raise RuntimeError(
+                    "Gemini API request timed out "
+                    f"after {MAX_ATTEMPTS} attempts."
+                ) from exc
+
+
+            base_delay = (
+                INITIAL_RETRY_DELAY
+                *
+                (2 ** (attempt - 1))
+            )
+
+
+            jitter = random.uniform(
+                0,
+                10
+            )
+
+
+            delay = (
+                base_delay
+                +
+                jitter
+            )
+
+
+            print(
+                "Gemini API request timed out. "
+                f"Retrying in {delay:.1f} seconds..."
+            )
+
+
+            time.sleep(
+                delay
+            )
 
 
 # --------------------------------------------------
