@@ -7,26 +7,31 @@
       "name": "Electrical & Engineering",
       "questions": [
         {
+          "id": "week2-ee-001",
           "question": "What unit is used to measure electrical resistance?",
           "answer": "Ohms (Ω).",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-ee-002",
           "question": "What is the relationship between voltage, current and resistance described by Ohm's Law?",
           "answer": "V = I × R.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-ee-003",
           "question": "What is the purpose of a circuit breaker?",
           "answer": "To automatically interrupt a circuit when excessive current occurs.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-ee-004",
           "question": "In a PID controller, what does the 'I' represent?",
           "answer": "Integral action.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-ee-005",
           "question": "Why does an induction motor need slip to produce torque?",
           "answer": "Slip creates relative motion between the rotating magnetic field and the rotor, inducing rotor currents that interact with the magnetic field to produce torque.",
           "difficulty": "Hard"
@@ -37,26 +42,31 @@
       "name": "Technology",
       "questions": [
         {
+          "id": "week2-tech-001",
           "question": "What does USB stand for?",
           "answer": "Universal Serial Bus.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-tech-002",
           "question": "What does Wi-Fi primarily allow devices to do?",
           "answer": "Communicate over a wireless network.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-tech-003",
           "question": "What is cloud computing?",
           "answer": "The delivery of computing resources such as storage, processing and software over a network, typically the internet.",
           "difficulty": "Medium"
         },
         {
+          "id": "week2-tech-004",
           "question": "What is an algorithm?",
           "answer": "A defined sequence of steps or instructions used to solve a problem or perform a task.",
           "difficulty": "Medium"
         },
         {
+          "id": "week2-tech-005",
           "question": "What is the main purpose of encryption?",
           "answer": "To transform information into a form that is difficult for unauthorised people to understand without the appropriate key.",
           "difficulty": "Medium"
@@ -67,26 +77,31 @@
       "name": "Australia",
       "questions": [
         {
+          "id": "week2-au-001",
           "question": "What is the capital of Western Australia?",
           "answer": "Perth.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-au-002",
           "question": "Which Australian state is the smallest by area?",
           "answer": "Tasmania.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-au-003",
           "question": "What is Australia's national animal emblem?",
           "answer": "The kangaroo and emu are featured on Australia's coat of arms; Australia does not have a single officially designated national animal.",
           "difficulty": "Medium"
         },
         {
+          "id": "week2-au-004",
           "question": "Which Australian city is known as the Harbour City?",
           "answer": "Sydney.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-au-005",
           "question": "What is the name of Australia's largest coral reef ecosystem?",
           "answer": "The Great Barrier Reef.",
           "difficulty": "Easy"
@@ -97,26 +112,31 @@
       "name": "Science",
       "questions": [
         {
+          "id": "week2-sci-001",
           "question": "What force keeps planets in orbit around the Sun?",
           "answer": "Gravity.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-sci-002",
           "question": "What is H₂O?",
           "answer": "Water.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-sci-003",
           "question": "What is the chemical symbol for gold?",
           "answer": "Au.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-sci-004",
           "question": "What is DNA responsible for storing?",
           "answer": "Genetic information.",
           "difficulty": "Medium"
         },
         {
+          "id": "week2-sci-005",
           "question": "What is the difference between mass and weight?",
           "answer": "Mass is the amount of matter in an object, while weight is the force exerted on that mass by gravity.",
           "difficulty": "Medium"
@@ -127,26 +147,31 @@
       "name": "History & Geography",
       "questions": [
         {
+          "id": "week2-hg-001",
           "question": "Which country is the largest by land area?",
           "answer": "Russia.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-hg-002",
           "question": "What is the capital of Canada?",
           "answer": "Ottawa.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-hg-003",
           "question": "Which ancient civilisation developed democracy in Athens?",
           "answer": "The ancient Greeks.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-hg-004",
           "question": "What is the world's largest ocean?",
           "answer": "The Pacific Ocean.",
           "difficulty": "Easy"
         },
         {
+          "id": "week2-hg-005",
           "question": "What event is generally regarded as marking the beginning of the French Revolution?",
           "answer": "The storming of the Bastille on 14 July 1789.",
           "difficulty": "Medium"
