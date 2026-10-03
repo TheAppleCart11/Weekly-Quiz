@@ -1,0 +1,61 @@
+name: Generate Weekly Quiz
+
+on:
+  schedule:
+    # Wednesday 7:00 AM Queensland time (AEST)
+    # = Tuesday 9:00 PM UTC
+    - cron: "0 21 * * 2"
+
+  workflow_dispatch:
+    inputs:
+      week:
+        description: "Week number to generate (leave blank for the next sequential week)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-quiz-generation
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Generate next quiz
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.7-flash
+          QUIZ_WEEK: ${{ inputs.week }}
+        run: python scripts/generate_quiz.py
+
+      - name: Validate all quiz files
+        run: python scripts/validate_quiz.py
+
+      - name: Check repository changes
+        run: |
+          git status --short
+          test -n "$(git status --short -- quizzes)"
+
+      - name: Commit generated quiz
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add quizzes/
+
+          git commit -m "Generate weekly quiz"
+
+          git push
